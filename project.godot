@@ -1,0 +1,46 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "RaiixTester",
+"language": "GDScript",
+"path": "res://RaiixTest/Tester.gd"
+}, {
+"base": "Node",
+"class": "SMTCS",
+"language": "GDScript",
+"path": "res://StateMachineTransitionConditionSyntax/SMTCS.gd"
+}, {
+"base": "Reference",
+"class": "SMTCSLexemer",
+"language": "GDScript",
+"path": "res://StateMachineTransitionConditionSyntax/Lexemer.gd"
+}, {
+"base": "Reference",
+"class": "SMTCSParser",
+"language": "GDScript",
+"path": "res://StateMachineTransitionConditionSyntax/Parser.gd"
+} ]
+_global_script_class_icons={
+"RaiixTester": "",
+"SMTCS": "",
+"SMTCSLexemer": "",
+"SMTCSParser": ""
+}
+
+[application]
+
+config/name="State Machine Transition Condition Syntax"
+config/icon="res://icon.png"
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
