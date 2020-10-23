@@ -56,6 +56,12 @@ func check_is_char(n, v):
 		return n != null and n.type == SMTCSLexemer.LEXEME_TYPE.CHAR && n.value in v
 	return n != null and n.type == SMTCSLexemer.LEXEME_TYPE.CHAR && n.value == v
 
+func check_is_not_char(n, v):
+	if v is Array:
+		return n != null and n.type == SMTCSLexemer.LEXEME_TYPE.CHAR && not (n.value in v)
+	return n != null and n.type == SMTCSLexemer.LEXEME_TYPE.CHAR && n.value != v
+
+
 func check_is_bin_op(n, v):
 	if v is Array:
 		return n != null and n.type == SMTCSLexemer.LEXEME_TYPE.BIN_OP && n.value in v
@@ -314,7 +320,10 @@ func _term7():
 		next = lexemer.view_next()
 		if check_is_char(next, '('):
 			lexemer.get_next()
-			var arg_list = _args()
+			var arg_list = []
+			next = lexemer.view_next()
+			if next and not check_is_char(next, ')'):
+				arg_list = _args()
 			next = lexemer.get_next()
 			if check_is_char(next, ')'):
 				if check_is_literal(lexemer.view_next()):
@@ -352,6 +361,7 @@ func _term7():
 
 func _args():
 	var arg_list = []
+	
 	var expr = _expr()
 	arg_list.append(expr)
 	

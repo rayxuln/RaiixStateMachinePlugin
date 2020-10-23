@@ -78,7 +78,7 @@ func test_parsing_3():
 	eval_cond('1* 2*3')
 	eval_cond('1+')
 
-func _test_parsing_false():
+func test_parsing_false():
 	eval_cond('false')
 	eval_cond('true')
 

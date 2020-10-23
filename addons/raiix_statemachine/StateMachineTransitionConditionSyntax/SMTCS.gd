@@ -1,4 +1,4 @@
-extends Node
+extends Object
 
 class_name SMTCS
 
@@ -10,11 +10,13 @@ static func _eval(ast, agent:Node):
 		return ast.value
 	if ast.type == SMTCSParser.AST_NODE_TYPE.IDENTITY:
 		if not ast.value in agent:
+			printerr("Sematic error: unkown property " + ast.value)
 			return null
 		return agent[ast.value]
 	
 	if ast.type == SMTCSParser.AST_NODE_TYPE.FUNC:
 		if not agent.has_method(ast.func_name):
+			printerr("Sematic error: unkown method " + ast.func_name)
 			return null
 		var arg_list_v = []
 		for arg in ast.arg_list:
@@ -38,16 +40,37 @@ static func _eval(ast, agent:Node):
 		var r = _eval(ast.children[1], agent)
 		match op:
 			'+':
-				if(l is String):
+				if l is String :
 					return l + str(r)
+				if typeof(l) == TYPE_INT or typeof(l) == TYPE_REAL:
+					if typeof(r) != TYPE_INT or typeof(r) != TYPE_REAL:
+						r = float(r)
 				return l + r
 			'-':
+				if typeof(l) == TYPE_INT or typeof(l) == TYPE_REAL:
+					if typeof(r) != TYPE_INT or typeof(r) != TYPE_REAL:
+						r = float(r)
 				return l - r
 			'*':
+				if typeof(l) == TYPE_INT or typeof(l) == TYPE_REAL:
+					if typeof(r) != TYPE_INT or typeof(r) != TYPE_REAL:
+						r = float(r)
 				return l * r
 			'/':
+				if typeof(l) == TYPE_INT or typeof(l) == TYPE_REAL:
+					if typeof(r) != TYPE_INT or typeof(r) != TYPE_REAL:
+						r = float(r)
+				if r==0:
+					printerr("Sematic error: r==0")
+					return null
 				return l / r
 			'%':
+				if typeof(l) == TYPE_INT or typeof(l) == TYPE_REAL:
+					if typeof(r) != TYPE_INT or typeof(r) != TYPE_REAL:
+						r = float(r)
+				if r==0:
+					printerr("Sematic error: r==0")
+					return null
 				return int(l) % int(r)
 			'>':
 				return l > r
