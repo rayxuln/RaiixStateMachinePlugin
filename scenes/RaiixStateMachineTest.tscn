@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachine/StateMachine.gd" type="Script" id=1]
 [ext_resource path="res://scenes/states/idle.gd" type="Script" id=2]
@@ -8,6 +8,52 @@
 [ext_resource path="res://scenes/states/sub_states/run.gd" type="Script" id=6]
 [ext_resource path="res://scenes/states/sub_states/idle.gd" type="Script" id=7]
 
+[sub_resource type="AnimationNodeStateMachine" id=1]
+
+[sub_resource type="AnimationNodeAnimation" id=2]
+animation = "idle"
+
+[sub_resource type="AnimationNodeAnimation" id=3]
+animation = "idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=4]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=5]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachine" id=6]
+states/StateMachine/node = SubResource( 1 )
+states/StateMachine/position = Vector2( 408.5, 168.5 )
+states/idle/node = SubResource( 3 )
+states/idle/position = Vector2( 219.5, 67 )
+"states/idle 2/node" = SubResource( 2 )
+"states/idle 2/position" = Vector2( 433.5, 61.5 )
+transitions = [ "idle", "idle 2", SubResource( 4 ), "idle 2", "idle", SubResource( 5 ) ]
+start_node = "idle"
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=7]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=8]
+
+[sub_resource type="Animation" id=9]
+resource_name = "idle"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.815686, 0.0627451, 0.0627451, 1 ) ]
+}
+
 [node name="RaiixStateMachineTest" type="Node2D"]
 
 [node name="Player" type="KinematicBody2D" parent="."]
@@ -15,6 +61,7 @@ position = Vector2( 437.981, 286.865 )
 script = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="Player"]
+self_modulate = Color( 0.947053, 0.730759, 0.730759, 1 )
 texture = ExtResource( 3 )
 
 [node name="MovmentStateMachine" type="Node" parent="Player"]
@@ -38,3 +85,13 @@ script = ExtResource( 7 )
 
 [node name="run" type="Node" parent="Player/MovmentStateMachine/run/MovmentStateMachine2"]
 script = ExtResource( 6 )
+
+[node name="AnimationTree" type="AnimationTree" parent="Player"]
+tree_root = SubResource( 6 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/playback = SubResource( 7 )
+parameters/StateMachine/playback = SubResource( 8 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+anims/idle = SubResource( 9 )
