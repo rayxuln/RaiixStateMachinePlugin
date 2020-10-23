@@ -57,10 +57,10 @@ size_flags_vertical = 3
 [node name="CreateNodeMenu" type="PopupMenu" parent="."]
 margin_left = -172.0
 margin_top = -173.0
-margin_right = -1.0
-margin_bottom = -42.0
+margin_right = -0.999985
+margin_bottom = -103.0
 size_flags_vertical = 3
-items = [ "Create Template Node", null, 0, false, false, 0, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "delete", null, 0, false, false, 1, 0, null, "", false ]
+items = [ "New State", null, 0, false, false, 0, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "delete", null, 0, false, false, 1, 0, null, "", false ]
 __meta__ = {
 "_edit_use_anchors_": false
 }

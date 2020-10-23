@@ -36,3 +36,15 @@ mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="HomeButton" type="Button" parent="."]
+margin_left = 12.2711
+margin_top = 8.49535
+margin_right = 34.2711
+margin_bottom = 28.4953
+text = "H"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]

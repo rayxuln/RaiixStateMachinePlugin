@@ -115,6 +115,13 @@ func unselect_all():
 		if n:
 			n.unselect()
 	selection.clear()
+
+func go_home():
+	scroll_offset = Vector2.ZERO
+	_update_nodes_position()
+	self.zoom = 1
+	target_zoom = 1
+	zooming = false
 #----- Singals -----
 func _gui_input(event):
 	if event is InputEventMouseButton:
@@ -131,6 +138,11 @@ func _gui_input(event):
 
 func _on_node_gui_input(event, node):
 	emit_signal("node_gui_input", event, node)
+	
+	# Enable dragging canvas
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == BUTTON_MIDDLE:
+			is_dragging = true
 
 func _on_node_pressed(node):
 	select(node)
@@ -140,3 +152,7 @@ func _on_node_picked_up(node):
 
 func _on_node_picked_down(node):
 	dragging_nodes = false
+
+
+func _on_HomeButton_pressed():
+	go_home()

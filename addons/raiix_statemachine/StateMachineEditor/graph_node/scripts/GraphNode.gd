@@ -1,4 +1,4 @@
-extends Control
+extends PanelContainer
 
 signal picked_up(node)
 signal picked_down(node)
@@ -12,15 +12,48 @@ func _on_set_offset(v):
 onready var panel = $Panel
 onready var panel_stylebox = panel.get_stylebox("panel") as StyleBoxFlat
 
+onready var main_title = $HBoxContainer/MainTitle
+onready var top_tiltle = $Panel/TopTitle
+onready var left_button = $HBoxContainer/LeftButton
+onready var right_button = $HBoxContainer/RightButton
+
+export(String) var text:String = "Unkwon" setget _on_set_text
+func _on_set_text(v):
+	text = v
+	main_title.text = text
+	
+
+export(String) var tip_text:String = "tip" setget _on_set_tip_text
+func _on_set_tip_text(v):
+	tip_text = v
+	top_tiltle.text = tip_text
+
+export(Texture) var left_button_tex:Texture = null setget _on_set_left_button_tex
+func _on_set_left_button_tex(v):
+	left_button_tex = v
+	left_button.icon = left_button_tex
+
+export(Texture) var right_button_tex:Texture = null setget _on_set_right_button_tex
+func _on_set_right_button_tex(v):
+	right_button_tex = v
+	right_button.icon = right_button_tex
+	
 var graph_edit:Control
 
 var picking:bool = false
 
 var selected:bool = false
 
+var data:Dictionary = {}
+
 func _ready():
 	panel_stylebox = panel_stylebox.duplicate()
 	panel.add_stylebox_override("panel", panel_stylebox)
+	
+	_on_set_text(text)
+	_on_set_tip_text(tip_text)
+	_on_set_left_button_tex(left_button_tex)
+	_on_set_right_button_tex(right_button_tex)
 
 func _gui_input(event):
 	if event is InputEventMouseButton:
@@ -34,8 +67,6 @@ func _gui_input(event):
 		if not event.pressed and event.button_index == BUTTON_LEFT:
 			picking = false
 			emit_signal("picked_down", self)
-		
-			
 
 #----- Public Methods -----
 func update_rect_position():
@@ -51,3 +82,4 @@ func select():
 func unselect():
 	panel_stylebox.shadow_size = 0
 	selected = false
+

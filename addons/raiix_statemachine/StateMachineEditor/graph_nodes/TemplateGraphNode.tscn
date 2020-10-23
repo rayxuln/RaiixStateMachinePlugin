@@ -15,9 +15,8 @@ margin_bottom = 26.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="GraphNode" parent="." instance=ExtResource( 2 )]
-margin_left = -46.5
-margin_top = -26.0
-margin_right = 46.5
-margin_bottom = 26.0
