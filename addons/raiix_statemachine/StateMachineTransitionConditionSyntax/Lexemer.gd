@@ -43,6 +43,8 @@ var product_queue:Array
 
 var error_cnt = 0
 
+const BLANK_CHAR = [' ', '\n', '\t', '\r']
+
 func _init(s):
 	source = s
 	next = 0
@@ -97,8 +99,10 @@ func toast_raw_string(v:String):
 	if v.empty():
 		return v
 	var id = v[0]
-	v = v.lstrip(id)
-	v = v.rstrip(id)
+	if v.length() < 2:
+		error("broken string")
+		return ""
+	v = v.substr(1, v.length()-2)
 	return v.c_unescape()
 	
 func get_double_op(op):
@@ -160,20 +164,35 @@ func get_string(id):
 	if check_next(id):
 		var start = next
 		next += 1
-		while check_next_not(id) or check_next('\\', -1):
+		var esc = false
+		while next < source.length():
+			if esc:
+				esc	= false
+				next += 1
+				continue
+			if not esc and check_next('\\'):
+				esc = true
+				next += 1
+				continue
+			if check_next(id):
+				break
 			next += 1
 		if start+1 == next:
-			error("Broken string")
-			return null
+			next += 1
+			return _string("")
 		if not check_next(id):
 			error("Expected %s" % id)
 			return null
 		next += 1
-		var res = toast_raw_string(source.substr(start, next-start))
+		var res = source.substr(start, next-start)
+#		print("raw res: " + res)
+		res = toast_raw_string(res)
+#		print("res: " + res)
+		
 		return _string(res)
 
 func _get_next():
-	while check_next([' ', '\n', '\t', '\r']):
+	while check_next(BLANK_CHAR):
 		next += 1
 	
 	if next >= source.length():
@@ -272,6 +291,21 @@ func _get_next():
 	
 	
 	# get char
+	if next >= source.length():
+		return null
 	res = _char(source[next])
+	if source[next] == '.' and check_next(BLANK_CHAR, -1):
+		error("Unexpected %s before ." % _str_escape(source[next-1]))
+		next += 1
+		return null
+	if source[next] == '.' and check_next(BLANK_CHAR, 1):
+		next += 2
+		error("Unexpected %s after ." % _str_escape(source[next-1]))
+		return null
 	next += 1
 	return res
+
+func _str_escape(c:String):
+	if c == ' ':
+		return 'space'
+	return c.c_escape()

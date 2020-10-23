@@ -1,6 +1,6 @@
 extends Control
 
-var a
+var a = {"x":2333}
 var pi = PI
 
 func eval_cond(cond):

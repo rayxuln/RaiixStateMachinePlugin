@@ -12,7 +12,8 @@ class_name SMTCSParser
 # term4 => term5 | term4 q4_op term5
 # term5 => uni_op term6
 # term6 => term7 [ expr ]
-# term7 => null | number | string | boolean | array | object | ( expr ) | identity | identity ( args )
+# term7 => term8 | term7 . identity
+# term8 => null | number | string | boolean | array | object | ( expr ) | identity | identity ( args )
 # args => expr | args , expr
 
 # array => [ elements ]
@@ -24,6 +25,8 @@ class_name SMTCSParser
 # key => number | string
 
 var lexemer:SMTCSLexemer
+
+var max_error_cnt:int = 1
 
 enum AST_NODE_TYPE {
 	TERNARY,
@@ -49,7 +52,8 @@ func parse():
 		return null
 	return ast
 
-
+func is_stop_parsing():
+	return lexemer.error_cnt >= max_error_cnt
 
 func check_is_char(n, v):
 	if v is Array:
@@ -143,6 +147,8 @@ func gen_ast_node_literal(type=AST_NODE_TYPE.NULL, value=null):
 	return res
 
 func _expr():
+	if is_stop_parsing():
+		return null
 	var cond = _term1()
 	
 	var next = lexemer.view_next()
@@ -163,6 +169,8 @@ func _expr():
 		return cond
 
 func _term1():
+	if is_stop_parsing():
+		return null
 	var l = _term2()
 	
 	while true:
@@ -184,6 +192,8 @@ func _term1():
 
 
 func _term2():
+	if is_stop_parsing():
+		return null
 	var l = _term3()
 	
 	while true:
@@ -204,6 +214,8 @@ func _term2():
 	return l
 
 func _term3():
+	if is_stop_parsing():
+		return null
 	var l = _term4()
 	
 	while true:
@@ -224,6 +236,8 @@ func _term3():
 	return l
 
 func _term4():
+	if is_stop_parsing():
+		return null
 	var l = _term5()
 	
 	while true:
@@ -244,6 +258,8 @@ func _term4():
 	return l
 
 func _term5():
+	if is_stop_parsing():
+		return null
 	var v_next = lexemer.view_next()
 	if v_next == null:
 		return null
@@ -258,6 +274,8 @@ func _term5():
 	return x
 
 func _term6():
+	if is_stop_parsing():
+		return null
 	var target = _term7()
 	
 	var next = lexemer.view_next()
@@ -279,6 +297,33 @@ func _term6():
 	return target
 
 func _term7():
+	if is_stop_parsing():
+		return null
+	var l = _term8()
+	
+	while true:
+		var next = lexemer.view_next()
+		if next == null:
+			return l
+		if check_is_char(next, '.'):
+			lexemer.get_next()
+			var op = next.value
+			
+			next = lexemer.get_next()
+			if check_is_identity(next):
+				l = gen_ast_node_binary(l, next.value, op)
+			else:
+				lexemer.error("Syntax error: something missing on the right of " + op)
+				return null
+		else:
+			break
+		
+	
+	return l
+
+func _term8():
+	if is_stop_parsing():
+		return null
 	var next = lexemer.view_next()
 	
 	if check_is_null(next):
@@ -360,6 +405,8 @@ func _term7():
 	return null
 
 func _args():
+	if is_stop_parsing():
+		return []
 	var arg_list = []
 	
 	var expr = _expr()
@@ -373,6 +420,8 @@ func _args():
 	return arg_list
 
 func _array():
+	if is_stop_parsing():
+		return null
 	var next = lexemer.get_next()
 	if check_is_char(next, '['):
 		var elements = _elements()
@@ -387,6 +436,8 @@ func _array():
 		return null
 
 func _elements():
+	if is_stop_parsing():
+		return []
 	var elements = []
 	var e = _expr()
 	elements.append(e)
@@ -399,6 +450,8 @@ func _elements():
 	return elements
 
 func _object():
+	if is_stop_parsing():
+		return null
 	var next = lexemer.get_next()
 	if check_is_char(next, '{'):
 		var key_values = _key_values()
@@ -413,6 +466,8 @@ func _object():
 		return null
 		
 func _key_values():
+	if is_stop_parsing():
+		return []
 	
 	var kv = _key_value()
 	var key_values = [kv]
@@ -425,6 +480,9 @@ func _key_values():
 	return key_values
 
 func _key_value():
+	if is_stop_parsing():
+		return null
+
 	var kv = []
 	kv.resize(2)
 	var k = _key()
@@ -439,6 +497,9 @@ func _key_value():
 		return null
 
 func _key():
+	if is_stop_parsing():
+		return null
+		
 	var next = lexemer.get_next()
 	if check_is_number(next):
 		return int(next.value)

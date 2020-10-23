@@ -47,6 +47,10 @@ func test_pure_string_cond():
 	print_lexemers('("')
 	print_lexemers('"Hello" + "Wor\\"ld!" == "Hello Wor\\"ld!"')
 
+func test_pure_dot_index():
+	print_lexemers('a.b')
+	print_lexemers('a.b.c.d')
+
 func print_ast_tree(cond):
 	var p = SMTCSParser.new(cond)
 	print(JSON.print(p.parse(), "\t"))
@@ -54,7 +58,7 @@ func print_ast_tree(cond):
 func eval_cond(cond):
 	print("[" + cond + "]: " + str(SMTCS.eval(cond, self)))
 
-func test_parsing_1():
+func _test_parsing_1():
 	eval_cond("1 + 1")
 	eval_cond("1 + 1 * 0")
 	eval_cond("(1 + 1) * 0")
@@ -65,7 +69,7 @@ func test_parsing_1():
 
 	
 
-func test_parsing_2():
+func _test_parsing_2():
 	eval_cond("name+'666'")
 	eval_cond('{"name":name , "age": "mix"}')
 	eval_cond('[name, 233/2]')
@@ -81,6 +85,13 @@ func test_parsing_3():
 func test_parsing_false():
 	eval_cond('false')
 	eval_cond('true')
+
+var a1 = {"type":666, "x":{"x":233}}
+func test_dot_index():
+	eval_cond('a1 . type+3')
+	eval_cond('a1. x . x')
+	eval_cond('a1.type+3')
+	eval_cond('{"x":332}.x')
 
 func _ready():
 	var t = RaiixTester.new(self, "SMTCS Parsing Tester")
