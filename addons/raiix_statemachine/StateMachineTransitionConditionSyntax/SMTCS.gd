@@ -130,17 +130,20 @@ static func _eval(ast, agent:Node, built_in_lib:Reference):
 	
 	printerr("Sematic error: Unkown type " + ast.type)
 	return null
-	
 
-static func eval(cond:String, agent:Object=null):
+
+static func eval_ast(ast:Dictionary, agent:Object=null):
 	var is_agent_null = agent == null
 	if is_agent_null:
 		agent = Node.new()
 	
-	var ast = SMTCSParser.new(cond).parse()
 	var res = _eval(ast, agent, preload('./build_in_lib.gd').new(agent))
 	
 	if is_agent_null:
 		agent.free()
 	
 	return res
+
+static func eval(cond:String, agent:Object=null):
+	var ast = SMTCSParser.new(cond).parse()
+	return eval_ast(ast, agent)
