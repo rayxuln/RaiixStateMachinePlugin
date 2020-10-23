@@ -60,9 +60,10 @@ margin_top = -173.0
 margin_right = -1.0
 margin_bottom = -42.0
 size_flags_vertical = 3
-items = [ "Create Template Node", null, 0, false, false, 0, 0, null, "", false ]
+items = [ "Create Template Node", null, 0, false, false, 0, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "delete", null, 0, false, false, 1, 0, null, "", false ]
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="gui_input" from="VBoxContainer/GraphEdit" to="." method="_on_GraphEdit_gui_input"]
+[connection signal="node_gui_input" from="VBoxContainer/GraphEdit" to="." method="_on_GraphEdit_node_gui_input"]
 [connection signal="id_pressed" from="CreateNodeMenu" to="." method="_on_CreateNodeMenu_id_pressed"]
