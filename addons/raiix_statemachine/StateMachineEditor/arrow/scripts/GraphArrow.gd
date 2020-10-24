@@ -11,6 +11,8 @@ var end_position:Vector2 = Vector2(60, 60) setget _on_set_end_position
 func _on_set_end_position(v):
 	end_position = v
 	update()
+	
+var point_offset:float = 20
 
 onready var texture_rect = $TextureRect
 export(Texture) var icon:Texture = null setget _on_set_icon
@@ -64,8 +66,11 @@ func _draw():
 	_update_rect()
 	
 	draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, true)
+	
 	if focus:
-		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 2)
+		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 2, true)
+	else:
+		draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, false, 1.0, true)
 
 
 func _gui_input(event):
@@ -91,18 +96,26 @@ func _update_rect():
 	else:
 		$ConditionLabel.visible = false
 		$ConditionLabelInversed.visible = true
+	
 
 func _update_condition_label_inversed_pivot():
 	$ConditionLabelInversed.rect_pivot_offset = $ConditionLabelInversed.rect_size/2.0
-	
+
+func calc_dir(start_position, end_position):
+	return (end_position - start_position).normalized()
+
+func calc_nor(dir):
+	var nor = Vector3(dir.x, dir.y, 0).cross(Vector3(0, 0, 1))
+	nor = Vector2(nor.x, nor.y)
+	return nor
+
 func calc_rect(start_position, end_position, line_width):
 	var r_pos = Vector2.ZERO
 	var r_size = Vector2.ZERO
 	var half_line_width = line_width / 2.0
 
-	var dir = (end_position - start_position).normalized()
-	var nor = Vector3(dir.x, dir.y, 0).cross(Vector3(0, 0, 1))
-	nor = Vector2(nor.x, nor.y)
+	var dir = calc_dir(start_position, end_position)
+	var nor = calc_nor(dir)
 	
 	var r1 = start_position + nor * half_line_width
 	var r2 = end_position + nor * half_line_width
@@ -121,8 +134,26 @@ func select():
 
 func unselect():
 	self.focus = false
+
+func calc_node_center(node:Control):
+	return node.offset + node.rect_size/2.0 - node.graph_edit.scroll_offset
+
+
+func update_point_pos_with_nodes():
+	var s_p = calc_node_center(start_node)
+	var e_p = calc_node_center(end_node)
+	var offset = point_offset * calc_nor(calc_dir(s_p, e_p))
+	self.start_position = s_p + offset
+	self.end_position = e_p + offset
+
 #------ Singals ------
 func _on_start_node_rect_changed():
-	self.start_position = start_node.offset + (start_node.rect_size)/2.0 - start_node.graph_edit.scroll_offset
+	if end_node:
+		update_point_pos_with_nodes()
+	else:
+		self.start_position = calc_node_center(start_node)
 func _on_end_node_rect_changed():
-	self.end_position = end_node.offset + (end_node.rect_size)/2.0 - end_node.graph_edit.scroll_offset
+	if start_node:
+		update_point_pos_with_nodes()
+	else:
+		self.end_position = calc_node_center(end_node)

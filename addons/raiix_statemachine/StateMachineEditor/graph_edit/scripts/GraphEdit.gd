@@ -120,6 +120,12 @@ func remove_node(n:Control):
 			a.queue_free()
 	n.queue_free()
 
+func check_is_node_connected(start_node, end_node):
+	for a in arrows.get_children():
+		if a.start_node == start_node and a.end_node == end_node:
+			return true
+	return false
+
 func place_arrow(start_node:Control):
 	arrow_placing_mode = true
 	arrow_placing_start_node = start_node
@@ -130,20 +136,34 @@ func place_arrow(start_node:Control):
 	a.edit_mode = true
 	
 	arrow_placing_arrow = a
+	
+	a.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func cancel_arrow_placing():
+	if arrow_placing_mode:
+		arrow_placing_mode  = false
+		arrow_placing_arrow.queue_free()
+		arrow_placing_hovering_node = null
+		arrow_placing_start_node = null
 
 func connect_nodes(start_node:Control, end_node:Control):
 	var a = preload("../../arrow/GraphArrow.tscn").instance()
 	arrows.add_child(a)
 	a.edit_mode = false
 	
-	a.start_position = start_node.offset + (start_node.rect_size)/2.0 - scroll_offset
-	a.end_position = end_node.offset + (end_node.rect_size)/2.0 - scroll_offset
-	
 	a.start_node = start_node
 	a.end_node = end_node
 	
+	a.update_point_pos_with_nodes()
+	
 	a.connect("gui_input", self, "_on_node_gui_input", [a])
 	a.connect("pressed", self, "_on_arrow_pressed")
+	
+	# force update
+	yield(get_tree(), "idle_frame")
+	a.update()
+
+	
 
 func select(node):
 	if not node in selection:

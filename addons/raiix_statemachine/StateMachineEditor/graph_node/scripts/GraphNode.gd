@@ -102,3 +102,22 @@ func unselect():
 	panel_stylebox.shadow_size = 0
 	selected = false
 
+
+
+func _on_LeftButton_pressed():
+	pass
+
+
+func _on_RightButton_pressed():
+	pass
+
+
+func _on_LeftButton_button_down():
+	if not picking:
+		emit_signal("pressed", self)
+		
+
+
+func _on_RightButton_button_down():
+	if not picking:
+		emit_signal("pressed", self)

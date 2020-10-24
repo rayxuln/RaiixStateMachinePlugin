@@ -87,3 +87,7 @@ margin_bottom = 35.0
 size_flags_vertical = 4
 flat = true
 align = 2
+[connection signal="button_down" from="HBoxContainer/LeftButton" to="." method="_on_LeftButton_button_down"]
+[connection signal="pressed" from="HBoxContainer/LeftButton" to="." method="_on_LeftButton_pressed"]
+[connection signal="button_down" from="HBoxContainer/RightButton" to="." method="_on_RightButton_button_down"]
+[connection signal="pressed" from="HBoxContainer/RightButton" to="." method="_on_RightButton_pressed"]
