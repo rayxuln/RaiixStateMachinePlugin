@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachineEditor/arrow/scripts/GraphArrow.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://addons/raiix_statemachine/images/arrow_icon.png" type="Texture" id=2]
 
 [node name="GraphArrow" type="Control"]
 anchor_left = 0.5

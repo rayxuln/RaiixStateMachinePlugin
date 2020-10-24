@@ -138,11 +138,21 @@ func unselect():
 func calc_node_center(node:Control):
 	return node.offset + node.rect_size/2.0 - node.graph_edit.scroll_offset
 
+func check_if_use_offset(start_node, end_node):
+	var e_ns = start_node.graph_edit.get_connected_to_nodes(start_node)
+	var s_ns = end_node.graph_edit.get_connected_to_nodes(end_node)
+	return start_node in s_ns and end_node in e_ns
 
 func update_point_pos_with_nodes():
 	var s_p = calc_node_center(start_node)
 	var e_p = calc_node_center(end_node)
 	var offset = point_offset * calc_nor(calc_dir(s_p, e_p))
+	
+	if not check_if_use_offset(start_node, end_node):
+		offset = Vector2.ZERO
+	
+#	print("update: " + str(offset))
+	
 	self.start_position = s_p + offset
 	self.end_position = e_p + offset
 

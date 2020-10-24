@@ -60,7 +60,7 @@ margin_top = -173.0
 margin_right = -0.999985
 margin_bottom = -103.0
 size_flags_vertical = 3
-items = [ "New State", null, 0, false, false, 0, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "add transition", null, 0, false, false, 2, 0, null, "", false, "delete", null, 0, false, false, 1, 0, null, "", false ]
+items = [ "New State", null, 0, false, false, 0, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "Connect To", null, 0, false, false, 2, 0, null, "", false, "Delete", null, 0, false, false, 1, 0, null, "", false ]
 __meta__ = {
 "_edit_use_anchors_": false
 }

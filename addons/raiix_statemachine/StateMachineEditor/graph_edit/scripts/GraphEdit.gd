@@ -73,6 +73,10 @@ func _update_nodes_position():
 	for n in nodes.get_children():
 		n.update_rect_position()
 
+func _update_rows_position():
+	for a in arrows.get_children():
+		a.update_point_pos_with_nodes()
+
 func _move_selected_nodes_position(offset):
 	for n in selection:
 		if n.has_method("graph_node_type"):
@@ -162,8 +166,23 @@ func connect_nodes(start_node:Control, end_node:Control):
 	# force update
 	yield(get_tree(), "idle_frame")
 	a.update()
+	yield(get_tree(), "idle_frame")
+	_update_rows_position()
 
-	
+func get_connected_to_nodes(start_node):
+	var res = []
+	for a in arrows.get_children():
+		if a.start_node == start_node:
+			if a.end_node:
+				res.append(a.end_node)
+	return res
+func get_connected_from_nodes(end_node):
+	var res = []
+	for a in arrows.get_children():
+		if a.end_node == end_node:
+			if a.start_node:
+				res.append(a.start_node)
+	return res
 
 func select(node):
 	if not node in selection:
@@ -187,10 +206,16 @@ func unselect_all():
 
 func go_home():
 	scroll_offset = Vector2.ZERO
-	_update_nodes_position()
+#	_update_nodes_position()
+#	_update_rows_position()
 	self.zoom = 1
 	target_zoom = 1
 	zooming = false
+	
+	yield(get_tree(), "idle_frame")
+	_update_nodes_position()
+	yield(get_tree(), "idle_frame")
+	_update_rows_position()
 #----- Singals -----
 func _gui_input(event):
 	if arrow_placing_mode:
