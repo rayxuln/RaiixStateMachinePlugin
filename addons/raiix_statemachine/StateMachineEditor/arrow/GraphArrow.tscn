@@ -27,3 +27,38 @@ margin_left = -64.0
 margin_top = -64.0
 margin_right = 64.0
 margin_bottom = 64.0
+
+[node name="ConditionLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -61.0
+margin_top = -29.7102
+margin_right = 61.0
+margin_bottom = -15.7102
+grow_horizontal = 2
+size_flags_horizontal = 6
+text = "condition1 == false"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConditionLabelInversed" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -61.0
+margin_top = 29.3835
+margin_right = 61.0
+margin_bottom = 43.3835
+grow_horizontal = 2
+rect_rotation = 180.0
+size_flags_horizontal = 6
+text = "condition1 == false"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -47,6 +47,12 @@ func _on_set_end_node(v):
 	if end_node:
 		end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
 
+export(String) var condition_text = null setget _on_set_condition_text
+func _on_set_condition_text(v):
+	condition_text = v
+	var t = condition_text if condition_text is String else ""
+	$ConditionLabel.text = t
+	$ConditionLabelInversed.text = t
 
 func _process(delta):
 	if edit_mode:
@@ -56,9 +62,11 @@ func _process(delta):
 
 func _draw():
 	_update_rect()
+	
+	draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, true)
 	if focus:
 		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 2)
-	draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, true)
+
 
 func _gui_input(event):
 	if event is InputEventMouseButton:
@@ -74,6 +82,18 @@ func _update_rect():
 	rect_position = res[0]
 	rect_size = res[1]
 	rect_rotation = res[2]
+	
+	_update_condition_label_inversed_pivot()
+	
+	if rect_rotation >= -90 and rect_rotation <= 90:
+		$ConditionLabel.visible = true
+		$ConditionLabelInversed.visible = false
+	else:
+		$ConditionLabel.visible = false
+		$ConditionLabelInversed.visible = true
+
+func _update_condition_label_inversed_pivot():
+	$ConditionLabelInversed.rect_pivot_offset = $ConditionLabelInversed.rect_size/2.0
 	
 func calc_rect(start_position, end_position, line_width):
 	var r_pos = Vector2.ZERO
