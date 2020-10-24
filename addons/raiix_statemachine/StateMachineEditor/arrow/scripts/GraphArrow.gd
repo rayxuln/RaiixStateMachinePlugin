@@ -29,15 +29,28 @@ func _on_set_focus(v):
 	var old = focus
 	focus = v
 	if old != focus:
+		get_parent().move_child(self, get_parent().get_child_count()-1)
 		update()
 
 var edit_mode = false
 
+var start_node:Control = null setget _on_set_start_node
+func _on_set_start_node(v):
+	start_node = v
+	if start_node:
+		start_node.connect("item_rect_changed", self, "_on_start_node_rect_changed")
+var end_node:Control = null setget _on_set_end_node
+func _on_set_end_node(v):
+	end_node = v
+	if end_node:
+		end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
 
 
 func _process(delta):
 	if edit_mode:
-		self.end_position = get_global_mouse_position()
+		var p = get_parent()
+		if p is Control:
+			self.end_position = p.get_local_mouse_position()
 
 func _draw():
 	_update_rect()
@@ -87,3 +100,8 @@ func calc_rect(start_position, end_position, line_width):
 	return [r_pos, r_size, rad2deg(dir.angle())]
 	
 	
+#------ Singals ------
+func _on_start_node_rect_changed():
+	self.start_position = start_node.offset + (start_node.rect_size)/2.0 - start_node.graph_edit.scroll_offset
+func _on_end_node_rect_changed():
+	self.end_position = end_node.offset + (end_node.rect_size)/2.0 - end_node.graph_edit.scroll_offset

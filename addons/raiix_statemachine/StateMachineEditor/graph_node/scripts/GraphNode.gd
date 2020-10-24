@@ -46,6 +46,23 @@ var selected:bool = false
 
 var data:Dictionary = {}
 
+export(Color) var hover_shadow_color:Color = Color.yellow
+var hover:bool = false setget _on_set_hover
+var _hover_shadow_color_save
+func _on_set_hover(v):
+	var old = hover
+	hover = v
+	if old != hover:
+		if panel == null:
+				yield(self, "ready")
+		if hover:
+			_hover_shadow_color_save = panel_stylebox.shadow_color
+			panel_stylebox.shadow_color = hover_shadow_color
+			panel_stylebox.shadow_size = 5
+		else:
+			panel_stylebox.shadow_color = _hover_shadow_color_save
+			panel_stylebox.shadow_size = 0
+
 func _ready():
 	panel_stylebox = panel_stylebox.duplicate()
 	panel.add_stylebox_override("panel", panel_stylebox)

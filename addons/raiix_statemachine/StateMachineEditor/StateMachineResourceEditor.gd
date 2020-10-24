@@ -16,6 +16,7 @@ func handle_gui_input(event):
 
 func detect_create_node_menu_item_enable_or_not():
 	create_node_menu.set_item_disabled(create_node_menu.get_item_index(1), graph_edit.selection.size() == 0)
+	create_node_menu.set_item_disabled(create_node_menu.get_item_index(2), graph_edit.selection.size() == 0)
 #----- Signals -----
 
 func _on_GraphEdit_gui_input(event):
@@ -32,7 +33,11 @@ func _on_CreateNodeMenu_id_pressed(id):
 	if id == 1:#delete
 		for n in graph_edit.selection:
 			graph_edit.remove_node(n)
+	if id == 2:#add transition
+		assert(graph_edit.selection.size() > 0)
+		graph_edit.place_arrow(graph_edit.selection[0])
 		
 
 
-
+func _on_GraphEdit_connect_node_request(start_node, end_node):
+	graph_edit.connect_nodes(start_node, end_node)
