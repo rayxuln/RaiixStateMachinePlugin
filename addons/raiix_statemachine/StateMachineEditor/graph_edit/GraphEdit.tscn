@@ -16,6 +16,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
 focus_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -49,11 +51,12 @@ __meta__ = {
 [node name="HomeButton" type="Button" parent="."]
 margin_left = 12.2711
 margin_top = 8.49535
-margin_right = 40.2711
-margin_bottom = 30.4953
+margin_right = 44.2711
+margin_bottom = 40.4953
 icon = ExtResource( 2 )
 flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="resized" from="." to="." method="_on_GraphEdit_resized"]
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]

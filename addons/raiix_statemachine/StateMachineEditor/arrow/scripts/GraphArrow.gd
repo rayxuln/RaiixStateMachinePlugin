@@ -1,3 +1,4 @@
+tool
 extends Control
 
 signal pressed(node)
@@ -24,7 +25,7 @@ func _on_set_icon(v):
 	
 	texture_rect.texture = icon
 
-var line_width = 5
+var line_width = 3
 export(Color) var line_color = Color.white
 export(Color) var focus_line_color = Color.yellow
 
@@ -49,12 +50,19 @@ func _on_set_end_node(v):
 	if end_node:
 		end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
 
+onready var condition_label = $ConditionLabel
+onready var condition_label_inversed = $ConditionLabelInversed
+
 export(String) var condition_text = null setget _on_set_condition_text
 func _on_set_condition_text(v):
 	condition_text = v
 	var t = condition_text if condition_text is String else ""
-	$ConditionLabel.text = t
-	$ConditionLabelInversed.text = t
+	if condition_label == null:
+		yield(self, "ready")
+	condition_label.text = t
+	condition_label.text = t
+
+var data:Dictionary = {}
 
 func _process(delta):
 	if edit_mode:
@@ -68,7 +76,7 @@ func _draw():
 	draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, true)
 	
 	if focus:
-		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 2, true)
+		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 1, true)
 	else:
 		draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, false, 1.0, true)
 

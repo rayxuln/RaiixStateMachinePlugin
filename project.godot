@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "StateMachine",
 "language": "GDScript",
 "path": "res://addons/raiix_statemachine/StateMachine/StateMachine.gd"
+}, {
+"base": "Resource",
+"class": "StateMachineResource",
+"language": "GDScript",
+"path": "res://addons/raiix_statemachine/StateMachineResource/StateMachineResource.gd"
 } ]
 _global_script_class_icons={
 "RaiixTester": "",
@@ -45,17 +50,14 @@ _global_script_class_icons={
 "SMTCSLexemer": "",
 "SMTCSParser": "",
 "State": "",
-"StateMachine": ""
+"StateMachine": "",
+"StateMachineResource": ""
 }
 
 [application]
 
 config/name="State Machine Transition Condition Syntax"
 config/icon="res://icon.png"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "raiix_statemachine" )
 
 [input]
 

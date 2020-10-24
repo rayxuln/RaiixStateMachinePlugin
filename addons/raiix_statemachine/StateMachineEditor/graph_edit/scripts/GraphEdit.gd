@@ -1,3 +1,4 @@
+tool
 extends Control
 
 signal node_gui_input(event, node)
@@ -138,6 +139,7 @@ func place_arrow(start_node:Control):
 	arrows.add_child(a)
 	a.start_position = start_node.offset + (start_node.rect_size)/2.0 - scroll_offset
 	a.edit_mode = true
+	a.condition_text = '"What do you want it to connect with?"'
 	
 	arrow_placing_arrow = a
 	
@@ -157,6 +159,7 @@ func connect_nodes(start_node:Control, end_node:Control):
 	
 	a.start_node = start_node
 	a.end_node = end_node
+	a.condition_text = null
 	
 	a.update_point_pos_with_nodes()
 	
@@ -282,3 +285,9 @@ func _on_node_mouse_exited(node):
 		node.hover = false
 	if arrow_placing_hovering_node == node:
 		arrow_placing_hovering_node = null
+
+
+func _on_GraphEdit_resized():
+	_update_nodes_position()
+	yield(get_tree(), "idle_frame")
+	_update_rows_position()

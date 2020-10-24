@@ -34,6 +34,8 @@ var current_state:State
 export(bool) var enable:bool = false
 export(bool) var auto_start:bool = true
 
+export(Resource) var state_machine_resource:Resource = null
+
 func _ready():
 	if auto_start:
 		start()

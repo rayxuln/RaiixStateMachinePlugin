@@ -1,12 +1,8 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachine/StateMachine.gd" type="Script" id=1]
-[ext_resource path="res://scenes/states/idle.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
-[ext_resource path="res://scenes/states/run.gd" type="Script" id=5]
-[ext_resource path="res://scenes/states/sub_states/run.gd" type="Script" id=6]
-[ext_resource path="res://scenes/states/sub_states/idle.gd" type="Script" id=7]
 
 [sub_resource type="AnimationNodeStateMachine" id=1]
 
@@ -61,35 +57,16 @@ position = Vector2( 437.981, 286.865 )
 script = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="Player"]
-self_modulate = Color( 0.81955, 0.0823933, 0.0823933, 1 )
 texture = ExtResource( 3 )
 
 [node name="MovmentStateMachine" type="Node" parent="Player"]
 script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
-init_state_path = NodePath("idle")
-
-[node name="idle" type="Node" parent="Player/MovmentStateMachine"]
-script = ExtResource( 2 )
-
-[node name="run" type="Node" parent="Player/MovmentStateMachine"]
-script = ExtResource( 5 )
-
-[node name="MovmentStateMachine2" type="Node" parent="Player/MovmentStateMachine/run"]
-script = ExtResource( 1 )
-init_state_path = NodePath("idle")
-
-[node name="idle" type="Node" parent="Player/MovmentStateMachine/run/MovmentStateMachine2"]
-script = ExtResource( 7 )
-
-[node name="run" type="Node" parent="Player/MovmentStateMachine/run/MovmentStateMachine2"]
-script = ExtResource( 6 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 6 )
 anim_player = NodePath("../AnimationPlayer")
-active = true
 parameters/playback = SubResource( 7 )
 parameters/StateMachine/playback = SubResource( 8 )
 

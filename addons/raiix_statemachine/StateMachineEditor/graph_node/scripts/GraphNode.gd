@@ -1,3 +1,4 @@
+tool
 extends PanelContainer
 
 signal picked_up(node)

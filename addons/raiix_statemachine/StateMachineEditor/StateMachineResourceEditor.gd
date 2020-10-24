@@ -1,10 +1,24 @@
+tool
 extends Control
 
 
 onready var create_node_menu = $CreateNodeMenu
-onready var graph_edit = $VBoxContainer/GraphEdit
+onready var graph_edit_container = $GraphEditContainer
+onready var graph_edit = $GraphEditContainer/GraphEdit
+onready var info_container = $InfoContainer
+onready var info_label = $InfoContainer/VBoxContainer/InfoLabel
 
 var arrow_placing_start_node = null
+
+var icon_tex = preload("../images/edit_icon.png")
+
+var state_machine:StateMachine = null
+
+var editor_plugin:EditorPlugin = null
+
+func _ready():
+	info_container.visible = true
+	graph_edit_container.visible = false
 
 #----- Methods -----
 func handle_gui_input(event):
@@ -29,6 +43,22 @@ func popup_create_node_menu():
 func detect_create_node_menu_item_enable_or_not():
 	create_node_menu.set_item_disabled(create_node_menu.get_item_index(1), graph_edit.selection.size() == 0)
 	create_node_menu.set_item_disabled(create_node_menu.get_item_index(2), graph_edit.selection.size() == 0 or not (graph_edit.selection.size()==1 and graph_edit.selection[0].has_method("graph_node_type")))
+
+func select_state_machine_node(sm):
+	state_machine = sm
+	if state_machine.state_machine_resource == null:
+		info_label.text = "Push the button to create a state machine resource!"
+		info_container.visible = true
+		graph_edit_container.visible = false
+	else:
+		info_container.visible = false
+		graph_edit_container.visible = true
+
+func refresh_inspector():
+	editor_plugin.get_editor_interface().get_inspector().refresh()
+#----- Undo Redo -----
+
+
 #----- Signals -----
 
 func _on_GraphEdit_gui_input(event):
@@ -39,8 +69,10 @@ func _on_GraphEdit_node_gui_input(event, node):
 
 func _on_CreateNodeMenu_id_pressed(id):
 	if id == 0:
-		var n = preload("./graph_nodes/TemplateGraphNode.tscn").instance()
-		n = graph_edit.add_node(n)
+		var n = preload("./graph_node/GraphNode.tscn").instance()
+		graph_edit.add_node(n)
+		n.tip_text = ""
+		n.text = "UnkownState"
 		n.offset = graph_edit.nodes.get_local_mouse_position() + graph_edit.scroll_offset
 		
 		if arrow_placing_start_node:
@@ -60,3 +92,10 @@ func _on_GraphEdit_connect_node_request(start_node, end_node):
 		graph_edit.connect_nodes(start_node, end_node)
 	else:
 		printerr("%s aleady connected with %s!" % [start_node.name, end_node.name])
+
+
+func _on_CreateSMRButton_pressed():
+	if not state_machine.state_machine_resource:
+		state_machine.state_machine_resource = StateMachineResource.new()
+	refresh_inspector()
+	select_state_machine_node(state_machine)
