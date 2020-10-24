@@ -20,3 +20,7 @@ __meta__ = {
 }
 
 [node name="GraphNode" parent="." instance=ExtResource( 2 )]
+margin_left = -27.0
+margin_top = -25.0
+margin_right = 27.0
+margin_bottom = 25.0

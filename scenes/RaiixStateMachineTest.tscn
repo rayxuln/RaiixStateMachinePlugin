@@ -61,7 +61,7 @@ position = Vector2( 437.981, 286.865 )
 script = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="Player"]
-self_modulate = Color( 0.947053, 0.730759, 0.730759, 1 )
+self_modulate = Color( 0.81955, 0.0823933, 0.0823933, 1 )
 texture = ExtResource( 3 )
 
 [node name="MovmentStateMachine" type="Node" parent="Player"]
