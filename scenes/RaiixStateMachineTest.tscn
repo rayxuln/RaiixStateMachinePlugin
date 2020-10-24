@@ -13,8 +13,8 @@ data = {
 "max_state_stack_size": 1,
 "states": [ {
 "init": true,
-"name": "state",
-"offset": Vector2( 125, 142 ),
+"name": "idle",
+"offset": Vector2( 15.0055, 4.00689 ),
 "script": null,
 "sub_state_machine": {
 "max_state_stack_size": 1,
@@ -23,26 +23,26 @@ data = {
 }
 }, {
 "init": false,
-"name": "state23",
-"offset": Vector2( 552.026, -13.9924 ),
+"name": "run",
+"offset": Vector2( 778.015, 76.0031 ),
 "script": null,
 "sub_state_machine": null
 } ],
 "transitions": [ {
 "cond": null,
-"from": "state",
-"to": "state23"
+"from": "idle",
+"to": "run"
 }, {
 "cond": null,
-"from": "state23",
-"to": "state"
+"from": "run",
+"to": "idle"
 } ]
 }
 
-[sub_resource type="AnimationNodeStateMachine" id=2]
-
 [sub_resource type="AnimationNodeAnimation" id=3]
 animation = "idle"
+
+[sub_resource type="AnimationNodeStateMachine" id=2]
 
 [sub_resource type="AnimationNodeAnimation" id=4]
 animation = "idle"
@@ -56,13 +56,13 @@ switch_mode = 2
 auto_advance = true
 
 [sub_resource type="AnimationNodeStateMachine" id=7]
+states/89/node = SubResource( 3 )
+states/89/position = Vector2( 433.5, 61.5 )
 states/StateMachine/node = SubResource( 2 )
 states/StateMachine/position = Vector2( 408.5, 168.5 )
 states/idle/node = SubResource( 4 )
 states/idle/position = Vector2( 219.5, 67 )
-"states/idle 2/node" = SubResource( 3 )
-"states/idle 2/position" = Vector2( 433.5, 61.5 )
-transitions = [ "idle", "idle 2", SubResource( 5 ), "idle 2", "idle", SubResource( 6 ) ]
+transitions = [ "idle", "89", SubResource( 5 ), "89", "idle", SubResource( 6 ) ]
 start_node = "idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=8]
