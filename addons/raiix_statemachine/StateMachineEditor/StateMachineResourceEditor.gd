@@ -75,7 +75,7 @@ func generate_nodes_and_connections_with_resource():
 	for node_data in sm_data.states:
 		var n = preload("./graph_node/GraphNode.tscn").instance()
 		graph_edit.add_node(n)
-		n.tip_text = ""
+		n.tip_text = "Init" if node_data.init else ""
 		n.name = node_data.name
 		n.text = node_data.name
 		n.offset = node_data.offset
@@ -94,9 +94,10 @@ func add_state_node(pos):
 	var data = self.sm_resource.gen_state_data()
 	var n = preload("./graph_node/GraphNode.tscn").instance()
 	graph_edit.add_node(n)
-	n.tip_text = ""
+	n.tip_text = "Init" if data.init else ""
 	n.name = data.name
-	n.text = data.name # Should be the name of script
+	data.name = n.name
+	n.text = data.name
 	n.data = data
 	n.offset = pos
 	self.sm_resource.current.states.append(data)
@@ -160,3 +161,66 @@ func _on_GraphEdit_about_to_remove_node(n):
 	for arrow in graph_edit.arrows.get_children():
 		if arrow.start_node == n or arrow.end_node == n:
 			self.sm_resource.current.transitions.erase(arrow.data)
+	editor_plugin.node_data_inspector.uninspect()
+	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
+
+
+
+func _on_GraphEdit_select_node(node):
+	if graph_edit.selection.size() == 1 and node.has_method("graph_node_type"):
+		if not editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+			editor_plugin.node_data_inspector.connect("inspecting_data_changed", self, "_on_node_data_inspector_changed", [node])
+		
+		editor_plugin.node_data_inspector.inspect(node.name, node.data)
+	else:
+		editor_plugin.node_data_inspector.uninspect()
+		if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
+		
+
+func _on_GraphEdit_unselect_node(node):
+	editor_plugin.node_data_inspector.uninspect()
+	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
+
+
+func _on_node_data_inspector_changed(key, value, node):
+	if node:
+		if key == 'name' and value is String and not value.empty():
+			var old_name = node.name
+			node.name = value
+			value = node.name
+			
+			node.text = value
+			node.data.name = value
+			editor_plugin.node_data_inspector.title = value
+			
+			# change all the name in transition
+			for t in sm_resource.current.transitions:
+				if t.to == old_name:
+					t.to = value
+				if t.from == old_name:
+					t.from = value
+		if key == 'script':
+			node.data.script = value
+		if key == 'sub_state_machine':
+			if value:
+				node.data.sub_state_machine = sm_resource.gen_state_machine_data()
+			else:
+				node.data.sub_state_machine = null
+		if key == 'init':
+			if value:
+				node.data.init = true
+				node.tip_text = 'Init'
+				for n in graph_edit.nodes.get_children():
+					if n != node:
+						n.data.init = false
+						n.tip_text = ''
+						
+			else:
+				node.data.init = false
+				node.tip_text = ''
+
+
+

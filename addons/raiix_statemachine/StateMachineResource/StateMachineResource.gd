@@ -25,12 +25,11 @@ func gen_state_machine_data():
 	return {
 		"states": [],
 		"transitions": [],
-		"init_state": "",
 		"max_state_stack_size": 1
 	}
 func gen_state_data():
 	return {
-		"name": "UnkownState_" + str(OS.get_ticks_msec()),
+		"name": "state",
 		"script": null,
 		"sub_state_machine": null,
 		"offset": Vector2.ZERO,

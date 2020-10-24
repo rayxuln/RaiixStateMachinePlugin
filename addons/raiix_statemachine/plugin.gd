@@ -5,12 +5,29 @@ var StateMachineResourceEditor = preload("./StateMachineEditor/StateMachineResou
 
 var state_machine_resource_editor:Control = null
 
+var script_select_dialog:Control = null
+var node_data_inspector:Control = null
+
 func _enter_tree():
 	get_editor_interface().get_selection().connect("selection_changed", self, "_on_selecton_changed")
 	get_editor_interface().get_inspector().connect("property_edited", self, "_on_inspector_property_edited")
 	
+	script_select_dialog = preload("./ScriptSelectDialog/ScriptSelectDialog.tscn").instance()
+	get_editor_interface().get_base_control().add_child(script_select_dialog)
+	
+	node_data_inspector = preload("./StateMachineResourceNodeDataInspector/NodeDataInspector.tscn").instance()
+	node_data_inspector.editor_plugin = self
+	#add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, node_data_inspector)
+
 func _exit_tree():
+	script_select_dialog.queue_free()
+	
+	#remove_control_from_docks(node_data_inspector)
+	node_data_inspector.uninspect()
+	node_data_inspector.queue_free()
+	
 	remove_state_machine_resource_editor()
+	
 
 #----- Methods ------
 func add_state_machine_resource_edtor():
@@ -22,10 +39,18 @@ func add_state_machine_resource_edtor():
 
 func remove_state_machine_resource_editor():
 	if state_machine_resource_editor:
+		node_data_inspector.uninspect()
 		remove_control_from_bottom_panel(state_machine_resource_editor)
 		state_machine_resource_editor.free()
+		
 
+func get_script_file(node:Control, call_back, hide_call_back):
+	if not script_select_dialog.is_connected("script_selected", node, call_back):
+		script_select_dialog.connect("script_selected", node, call_back, [], CONNECT_ONESHOT)
+		script_select_dialog.connect("about_to_hide", node, hide_call_back, [], CONNECT_ONESHOT)
+	script_select_dialog.popup()
 
+	
 #----- Singals ------
 func _on_selecton_changed():
 	var selection = get_editor_interface().get_selection().get_selected_nodes()

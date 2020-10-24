@@ -1,0 +1,143 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/raiix_statemachine/StateMachineResourceNodeDataInspector/scripts/NodeDataInspector.gd" type="Script" id=1]
+[ext_resource path="res://addons/raiix_statemachine/images/reset_icon.png" type="Texture" id=2]
+
+[node name="NodeDataInspector" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 7.0
+margin_right = -4.0
+margin_bottom = -4.0
+custom_constants/separation = 25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+margin_right = 1012.0
+margin_bottom = 14.0
+text = "Title"
+valign = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 39.0
+margin_right = 1012.0
+margin_bottom = 149.0
+
+[node name="Name" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_right = 1012.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/Name"]
+margin_top = 5.0
+margin_right = 504.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Name"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/VBoxContainer/Name"]
+margin_left = 508.0
+margin_right = 1012.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "value"
+
+[node name="Script" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 1012.0
+margin_bottom = 54.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/Script"]
+margin_top = 6.0
+margin_right = 504.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Script"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer/Script"]
+margin_left = 508.0
+margin_right = 1012.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/Script/HBoxContainer"]
+margin_right = 468.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+text = "Choose..."
+
+[node name="ClearButton" type="Button" parent="VBoxContainer/VBoxContainer/Script/HBoxContainer"]
+margin_left = 472.0
+margin_right = 504.0
+margin_bottom = 26.0
+icon = ExtResource( 2 )
+
+[node name="SubStateMachine" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 58.0
+margin_right = 1012.0
+margin_bottom = 82.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/SubStateMachine"]
+margin_top = 5.0
+margin_right = 504.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Sub State Machine"
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer/SubStateMachine"]
+margin_left = 508.0
+margin_right = 1012.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "On"
+
+[node name="Init" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 86.0
+margin_right = 1012.0
+margin_bottom = 110.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/Init"]
+margin_top = 5.0
+margin_right = 504.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Init"
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/VBoxContainer/Init"]
+margin_left = 508.0
+margin_right = 1012.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "On"
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer"]
+margin_left = 434.0
+margin_top = 293.0
+margin_right = 589.0
+margin_bottom = 307.0
+text = "No data are inspecting..."
+align = 1
+valign = 1
+[connection signal="text_changed" from="VBoxContainer/VBoxContainer/Name/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Script/HBoxContainer/Button" to="." method="_on_Script_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Script/HBoxContainer/ClearButton" to="." method="_on_ClearButton_pressed"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/SubStateMachine/CheckBox" to="." method="_on_SubStateMachine_CheckBox_toggled"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/Init/CheckBox" to="." method="_on_Init_CheckBox_toggled"]

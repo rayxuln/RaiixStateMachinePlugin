@@ -5,85 +5,67 @@
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
 
-[sub_resource type="Resource" id=10]
+[sub_resource type="Resource" id=11]
 script = ExtResource( 2 )
-zoom = 0.713922
-scroll_offset = Vector2( 302.416, -331.218 )
+zoom = 1.0
+scroll_offset = Vector2( 0, 0 )
 data = {
-"init_state": "",
 "max_state_stack_size": 1,
 "states": [ {
 "init": false,
-"name": "UnkownState_30828980",
-"offset": Vector2( 1607.32, 190.247 ),
+"name": "state",
+"offset": Vector2( 183, 152 ),
 "script": null,
 "sub_state_machine": null
 }, {
 "init": false,
-"name": "UnkownState_30829947",
-"offset": Vector2( 394.825, 45.0973 ),
-"script": null,
-"sub_state_machine": null
-}, {
-"init": false,
-"name": "UnkownState_30881103",
-"offset": Vector2( 1945.2, 690.071 ),
-"script": null,
-"sub_state_machine": null
-}, {
-"init": false,
-"name": "UnkownState_30883787",
-"offset": Vector2( 556.106, 593.084 ),
+"name": "state2",
+"offset": Vector2( 1100, 120 ),
 "script": null,
 "sub_state_machine": null
 } ],
 "transitions": [ {
 "cond": null,
-"from": "UnkownState_30828980",
-"to": "UnkownState_30829947"
+"from": "state",
+"to": "state2"
 }, {
 "cond": null,
-"from": "UnkownState_30829947",
-"to": "UnkownState_30828980"
-}, {
-"cond": null,
-"from": "UnkownState_30828980",
-"to": "UnkownState_30883787"
+"from": "state2",
+"to": "state"
 } ]
 }
 
-[sub_resource type="AnimationNodeStateMachine" id=1]
-
-[sub_resource type="AnimationNodeAnimation" id=2]
-animation = "idle"
+[sub_resource type="AnimationNodeStateMachine" id=2]
 
 [sub_resource type="AnimationNodeAnimation" id=3]
 animation = "idle"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=4]
-switch_mode = 2
-auto_advance = true
+[sub_resource type="AnimationNodeAnimation" id=4]
+animation = "idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=5]
 switch_mode = 2
 auto_advance = true
 
-[sub_resource type="AnimationNodeStateMachine" id=6]
-states/StateMachine/node = SubResource( 1 )
-states/StateMachine/position = Vector2( 408.5, 168.5 )
-states/idle/node = SubResource( 3 )
-states/idle/position = Vector2( 219.5, 67 )
-"states/idle 2/node" = SubResource( 2 )
-"states/idle 2/position" = Vector2( 433.5, 61.5 )
-transitions = [ "idle", "idle 2", SubResource( 4 ), "idle 2", "idle", SubResource( 5 ) ]
-start_node = "idle"
+[sub_resource type="AnimationNodeStateMachineTransition" id=6]
+switch_mode = 2
+auto_advance = true
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=7]
+[sub_resource type="AnimationNodeStateMachine" id=7]
+states/StateMachine/node = SubResource( 2 )
+states/StateMachine/position = Vector2( 408.5, 168.5 )
+states/idle/node = SubResource( 4 )
+states/idle/position = Vector2( 219.5, 67 )
+"states/idle 2/node" = SubResource( 3 )
+"states/idle 2/position" = Vector2( 433.5, 61.5 )
+transitions = [ "idle", "idle 2", SubResource( 5 ), "idle 2", "idle", SubResource( 6 ) ]
+start_node = "idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=8]
 
-[sub_resource type="Animation" id=9]
-resource_name = "idle"
+[sub_resource type="AnimationNodeStateMachinePlayback" id=9]
+
+[sub_resource type="Animation" id=10]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:self_modulate")
@@ -111,13 +93,14 @@ texture = ExtResource( 3 )
 script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
-state_machine_resource = SubResource( 10 )
+enable = true
+state_machine_resource = SubResource( 11 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
-tree_root = SubResource( 6 )
+tree_root = SubResource( 7 )
 anim_player = NodePath("../AnimationPlayer")
-parameters/playback = SubResource( 7 )
-parameters/StateMachine/playback = SubResource( 8 )
+parameters/playback = SubResource( 8 )
+parameters/StateMachine/playback = SubResource( 9 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
-anims/idle = SubResource( 9 )
+anims/idle = SubResource( 10 )

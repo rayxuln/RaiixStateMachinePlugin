@@ -34,11 +34,19 @@ export(Texture) var left_button_tex:Texture = null setget _on_set_left_button_te
 func _on_set_left_button_tex(v):
 	left_button_tex = v
 	left_button.icon = left_button_tex
+	if v:
+		left_button.visible = true
+	else:
+		left_button.visible = false
 
 export(Texture) var right_button_tex:Texture = null setget _on_set_right_button_tex
 func _on_set_right_button_tex(v):
 	right_button_tex = v
 	right_button.icon = right_button_tex
+	if v:
+		right_button.visible = true
+	else:
+		right_button.visible = false
 	
 var graph_edit:Control
 

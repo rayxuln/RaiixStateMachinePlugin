@@ -5,6 +5,8 @@ signal node_gui_input(event, node)
 signal connect_node_request(start_node, end_node)
 signal editor_data_changed(e)
 signal about_to_remove_node(node)
+signal select_node(node)
+signal unselect_node(node)
 
 export(Vector2) var scroll_offset = Vector2.ZERO setget _on_set_scroll_offset
 func _on_set_scroll_offset(v):
@@ -170,8 +172,6 @@ func connect_nodes(start_node:Control, end_node:Control, data):
 	arrows.add_child(a)
 	a.edit_mode = false
 	
-	print_debug(data)
-	
 	a.data = data
 	a.start_node = start_node
 	a.end_node = end_node
@@ -210,6 +210,7 @@ func select(node):
 			unselect_all()
 		selection.append(node)
 		node.select()
+		emit_signal("select_node", node)
 
 func unselect(node):
 	var pos = selection.find(node)
@@ -217,11 +218,13 @@ func unselect(node):
 		selection.remove(pos)
 		if node:
 			node.unselect()
+			emit_signal("unselect_node", node)
 
 func unselect_all():
 	for n in selection:
 		if n:
 			n.unselect()
+			emit_signal("unselect_node", n)
 	selection.clear()
 
 func go_home():

@@ -32,7 +32,7 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="."]
-margin_right = 54.0
+margin_right = 105.0
 margin_bottom = 80.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 2 )
@@ -41,16 +41,16 @@ __meta__ = {
 }
 
 [node name="TopTitle" type="Label" parent="Panel"]
-margin_top = -24.5503
+margin_top = -50.118
 margin_right = 372.0
-margin_bottom = -10.5503
-text = "Init"
+margin_bottom = -36.118
+text = "tip"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 54.0
+margin_right = 105.0
 margin_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -74,15 +74,16 @@ align = 0
 [node name="MainTitle" type="Label" parent="HBoxContainer"]
 margin_left = 27.0
 margin_top = 33.0
-margin_right = 27.0
+margin_right = 78.0
 margin_bottom = 47.0
+text = "Unkwon"
 align = 1
 valign = 1
 
 [node name="RightButton" type="Button" parent="HBoxContainer"]
-margin_left = 42.0
+margin_left = 93.0
 margin_top = 30.0
-margin_right = 54.0
+margin_right = 105.0
 margin_bottom = 50.0
 size_flags_vertical = 4
 flat = true

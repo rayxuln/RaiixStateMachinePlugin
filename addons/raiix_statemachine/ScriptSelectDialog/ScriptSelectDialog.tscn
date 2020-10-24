@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/raiix_statemachine/ScriptSelectDialog/scripts/ScriptSelectDialog.gd" type="Script" id=1]
+
+[node name="ScriptSelectDialog" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="."]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 190.664
+margin_top = 97.3422
+margin_right = -171.336
+margin_bottom = -114.658
+window_title = "Open a File"
+resizable = true
+mode = 0
+filters = PoolStringArray( "*.gd" )
+show_hidden_files = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="popup_hide" from="FileDialog" to="." method="_on_FileDialog_popup_hide"]

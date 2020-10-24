@@ -100,5 +100,7 @@ __meta__ = {
 [connection signal="editor_data_changed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_editor_data_changed"]
 [connection signal="gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_gui_input"]
 [connection signal="node_gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_gui_input"]
+[connection signal="select_node" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_select_node"]
+[connection signal="unselect_node" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_unselect_node"]
 [connection signal="pressed" from="InfoContainer/VBoxContainer/CreateSMRButton" to="." method="_on_CreateSMRButton_pressed"]
 [connection signal="id_pressed" from="CreateNodeMenu" to="." method="_on_CreateNodeMenu_id_pressed"]
