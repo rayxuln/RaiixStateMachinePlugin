@@ -16,7 +16,7 @@ func handle_gui_input(event):
 
 func detect_create_node_menu_item_enable_or_not():
 	create_node_menu.set_item_disabled(create_node_menu.get_item_index(1), graph_edit.selection.size() == 0)
-	create_node_menu.set_item_disabled(create_node_menu.get_item_index(2), graph_edit.selection.size() == 0)
+	create_node_menu.set_item_disabled(create_node_menu.get_item_index(2), graph_edit.selection.size() == 0 or not (graph_edit.selection.size()==1 and graph_edit.selection[0].has_method("graph_node_type")))
 #----- Signals -----
 
 func _on_GraphEdit_gui_input(event):

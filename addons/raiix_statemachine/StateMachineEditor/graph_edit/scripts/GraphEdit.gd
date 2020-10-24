@@ -75,8 +75,9 @@ func _update_nodes_position():
 
 func _move_selected_nodes_position(offset):
 	for n in selection:
-		n.offset += offset
-		n.update_rect_position()
+		if n.has_method("graph_node_type"):
+			n.offset += offset
+			n.update_rect_position()
 
 func _update_zooming():
 	if zooming:
@@ -104,8 +105,20 @@ func add_node(n:Node):
 
 	return n
 
-func remove_node(n:Node):
-	nodes.remove_child(n)
+func remove_node(n:Control):
+	if not n:
+		return
+	if n.has_method("graph_node_type"):
+		# delete arrows from it
+		# delete arrows to it
+		var deleted_arrows = []
+		for arrow in arrows.get_children():
+			if arrow.start_node == n or arrow.end_node == n:
+				deleted_arrows.append(arrow)
+		
+		for a in deleted_arrows:
+			a.queue_free()
+	n.queue_free()
 
 func place_arrow(start_node:Control):
 	arrow_placing_mode = true
@@ -130,6 +143,7 @@ func connect_nodes(start_node:Control, end_node:Control):
 	a.end_node = end_node
 	
 	a.connect("gui_input", self, "_on_node_gui_input", [a])
+	a.connect("pressed", self, "_on_arrow_pressed")
 
 func select(node):
 	if not node in selection:
@@ -195,6 +209,10 @@ func _on_node_gui_input(event, node):
 func _on_node_pressed(node):
 	if not arrow_placing_mode:
 		select(node)
+
+func _on_arrow_pressed(arrow):
+	if not arrow_placing_mode:
+		select(arrow)
 
 func _on_node_picked_up(node):
 	if not arrow_placing_mode:

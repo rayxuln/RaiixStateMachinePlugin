@@ -1,5 +1,7 @@
 extends Control
 
+signal pressed(node)
+
 var start_position:Vector2 = Vector2(30, 30) setget _on_set_start_position
 func _on_set_start_position(v):
 	start_position = v
@@ -58,18 +60,13 @@ func _draw():
 		draw_rect(Rect2(Vector2.ZERO, rect_size), focus_line_color, false, 2)
 	draw_rect(Rect2(Vector2.ZERO, rect_size), line_color, true)
 
-func _input(event):
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == BUTTON_LEFT:
-			event = make_input_local(event)
-			if not Rect2(Vector2(0,0),rect_size).has_point(event.position):
-				self.focus = false
-
 func _gui_input(event):
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == BUTTON_LEFT:
-			self.focus = true
+			emit_signal("pressed", self)
 
+func graph_arrow_type():
+	pass
 #----- Methods -----
 func _update_rect():
 	var res = calc_rect(start_position, end_position, line_width)
@@ -99,7 +96,11 @@ func calc_rect(start_position, end_position, line_width):
 	
 	return [r_pos, r_size, rad2deg(dir.angle())]
 	
-	
+func select():
+	self.focus = true
+
+func unselect():
+	self.focus = false
 #------ Singals ------
 func _on_start_node_rect_changed():
 	self.start_position = start_node.offset + (start_node.rect_size)/2.0 - start_node.graph_edit.scroll_offset

@@ -85,6 +85,8 @@ func _gui_input(event):
 			picking = false
 			emit_signal("picked_down", self)
 
+func graph_node_type():
+	pass
 #----- Public Methods -----
 func update_rect_position():
 	#rect_global_position = (offset - graph_edit.scroll_offset) / graph_edit.zoom + graph_edit.rect_global_position
