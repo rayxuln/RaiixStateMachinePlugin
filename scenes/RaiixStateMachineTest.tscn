@@ -1,8 +1,56 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachine/StateMachine.gd" type="Script" id=1]
+[ext_resource path="res://addons/raiix_statemachine/StateMachineResource/StateMachineResource.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
+
+[sub_resource type="Resource" id=10]
+script = ExtResource( 2 )
+zoom = 0.713922
+scroll_offset = Vector2( 302.416, -331.218 )
+data = {
+"init_state": "",
+"max_state_stack_size": 1,
+"states": [ {
+"init": false,
+"name": "UnkownState_30828980",
+"offset": Vector2( 1607.32, 190.247 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "UnkownState_30829947",
+"offset": Vector2( 394.825, 45.0973 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "UnkownState_30881103",
+"offset": Vector2( 1945.2, 690.071 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "UnkownState_30883787",
+"offset": Vector2( 556.106, 593.084 ),
+"script": null,
+"sub_state_machine": null
+} ],
+"transitions": [ {
+"cond": null,
+"from": "UnkownState_30828980",
+"to": "UnkownState_30829947"
+}, {
+"cond": null,
+"from": "UnkownState_30829947",
+"to": "UnkownState_30828980"
+}, {
+"cond": null,
+"from": "UnkownState_30828980",
+"to": "UnkownState_30883787"
+} ]
+}
 
 [sub_resource type="AnimationNodeStateMachine" id=1]
 
@@ -63,6 +111,7 @@ texture = ExtResource( 3 )
 script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
+state_machine_resource = SubResource( 10 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 6 )

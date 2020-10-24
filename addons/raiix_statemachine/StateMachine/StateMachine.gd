@@ -1,6 +1,9 @@
+tool
 extends Node
 
 class_name StateMachine
+
+signal state_machine_data_property_changed(sm)
 
 export(NodePath) var agent_path:NodePath setget _on_set_agent_path, _on_get_agent_path
 func _on_set_agent_path(v):
@@ -13,7 +16,10 @@ var agent:Node = null
 # The state stack is a ring buf
 # so no copying cost
 var state_stack:Array = []
-export(int) var max_state_stack_size:int = 1
+export(int) var max_state_stack_size:int = 1 setget _on_set_max_state_stack_size
+func _on_set_max_state_stack_size(v):
+	max_state_stack_size = v
+	emit_signal("state_machine_data_property_changed", self)
 var state_stack_head = 0
 var state_stack_tail = 0
 
@@ -25,6 +31,7 @@ export(NodePath) var init_state_path:NodePath setget _on_set_init_state_path, _o
 func _on_set_init_state_path(v):
 	init_state_path = v
 	init_state = get_node_or_null(init_state_path)
+	emit_signal("state_machine_data_property_changed", self)
 func _on_get_init_state_path():
 	return init_state_path
 var init_state:Node = null

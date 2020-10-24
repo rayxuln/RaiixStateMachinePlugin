@@ -15,6 +15,7 @@ __meta__ = {
 }
 
 [node name="GraphEditContainer" type="VBoxContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -59,7 +60,6 @@ margin_right = 1008.0
 margin_bottom = 586.0
 
 [node name="InfoContainer" type="CenterContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -95,7 +95,9 @@ items = [ "New State", null, 0, false, false, 0, 0, null, "", false, "", null, 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="about_to_remove_node" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_about_to_remove_node"]
 [connection signal="connect_node_request" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_connect_node_request"]
+[connection signal="editor_data_changed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_editor_data_changed"]
 [connection signal="gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_gui_input"]
 [connection signal="node_gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_gui_input"]
 [connection signal="pressed" from="InfoContainer/VBoxContainer/CreateSMRButton" to="." method="_on_CreateSMRButton_pressed"]

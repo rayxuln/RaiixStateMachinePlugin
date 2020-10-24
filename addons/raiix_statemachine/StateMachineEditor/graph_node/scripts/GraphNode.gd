@@ -8,6 +8,7 @@ signal pressed(node)
 export(Vector2) var offset = Vector2.ZERO setget _on_set_offset
 func _on_set_offset(v):
 	offset = v
+	data["offset"] = offset
 	update_rect_position()
 
 onready var panel = $Panel

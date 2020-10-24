@@ -43,11 +43,13 @@ var start_node:Control = null setget _on_set_start_node
 func _on_set_start_node(v):
 	start_node = v
 	if start_node:
+		data["from"] = start_node.name
 		start_node.connect("item_rect_changed", self, "_on_start_node_rect_changed")
 var end_node:Control = null setget _on_set_end_node
 func _on_set_end_node(v):
 	end_node = v
 	if end_node:
+		data["to"] = end_node.name
 		end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
 
 onready var condition_label = $ConditionLabel
@@ -60,7 +62,7 @@ func _on_set_condition_text(v):
 	if condition_label == null:
 		yield(self, "ready")
 	condition_label.text = t
-	condition_label.text = t
+	condition_label_inversed.text = t
 
 var data:Dictionary = {}
 

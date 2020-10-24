@@ -3,8 +3,13 @@ extends Control
 
 signal node_gui_input(event, node)
 signal connect_node_request(start_node, end_node)
+signal editor_data_changed(e)
+signal about_to_remove_node(node)
 
-export(Vector2) var scroll_offset = Vector2.ZERO
+export(Vector2) var scroll_offset = Vector2.ZERO setget _on_set_scroll_offset
+func _on_set_scroll_offset(v):
+	scroll_offset = v
+	emit_signal("editor_data_changed", self)
 
 var min_zoom = 0.3
 
@@ -18,6 +23,7 @@ func _on_set_zoom(v):
 	var z = Vector2(zoom, zoom)
 	nodes.rect_scale = z
 	arrows.rect_scale = z
+	emit_signal("editor_data_changed", self)
 	
 var target_zoom:float = zoom setget _on_set_target_zoom
 func _on_set_target_zoom(v):
@@ -58,7 +64,7 @@ func _input(event):
 			cancel_on_new_selection = true
 	elif event is InputEventMouseMotion:
 		if is_dragging:
-			scroll_offset -= event.relative / zoom
+			self.scroll_offset -= event.relative / zoom
 			_update_nodes_position()
 		if dragging_nodes:
 			_move_selected_nodes_position(event.relative / zoom)
@@ -89,7 +95,7 @@ func _update_zooming():
 		var old_mp = nodes.get_local_mouse_position()
 		self.zoom = lerp(zoom, target_zoom, 0.17)
 		var new_mp = nodes.get_local_mouse_position()
-		scroll_offset -= new_mp - old_mp
+		self.scroll_offset -= new_mp - old_mp
 		_update_nodes_position()
 		
 		if is_equal_approx(zoom, target_zoom):
@@ -123,7 +129,14 @@ func remove_node(n:Control):
 		
 		for a in deleted_arrows:
 			a.queue_free()
+	emit_signal("about_to_remove_node", n)
 	n.queue_free()
+
+func clear_all_nodes():
+	for a in arrows:
+		a.queue_free()
+	for n in nodes:
+		n.queue_free()
 
 func check_is_node_connected(start_node, end_node):
 	for a in arrows.get_children():
@@ -152,14 +165,18 @@ func cancel_arrow_placing():
 		arrow_placing_hovering_node = null
 		arrow_placing_start_node = null
 
-func connect_nodes(start_node:Control, end_node:Control):
+func connect_nodes(start_node:Control, end_node:Control, data):
 	var a = preload("../../arrow/GraphArrow.tscn").instance()
 	arrows.add_child(a)
 	a.edit_mode = false
 	
+	print_debug(data)
+	
+	a.data = data
 	a.start_node = start_node
 	a.end_node = end_node
-	a.condition_text = null
+	a.condition_text = data.cond
+	
 	
 	a.update_point_pos_with_nodes()
 	
@@ -208,7 +225,7 @@ func unselect_all():
 	selection.clear()
 
 func go_home():
-	scroll_offset = Vector2.ZERO
+	self.scroll_offset = Vector2.ZERO
 #	_update_nodes_position()
 #	_update_rows_position()
 	self.zoom = 1
