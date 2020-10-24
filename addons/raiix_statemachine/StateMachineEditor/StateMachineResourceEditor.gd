@@ -28,6 +28,7 @@ func _ready():
 #----- Methods -----
 func handle_gui_input(event):
 	if event is InputEventMouseButton:
+		ur_lib.ur_just_dirty_the_editor()
 		if event.pressed and event.button_index == BUTTON_RIGHT:
 			if graph_edit.arrow_placing_mode:
 				graph_edit.cancel_arrow_placing()
@@ -80,6 +81,7 @@ func generate_nodes_and_connections_with_resource():
 		n.text = node_data.name
 		n.offset = node_data.offset
 		n.data = node_data
+		n.right_button_tex = icon_tex if node_data.sub_state_machine else null
 	
 	# connect nodes
 	for arrow_data in sm_data.transitions:
@@ -187,6 +189,7 @@ func _on_GraphEdit_unselect_node(node):
 
 func _on_node_data_inspector_changed(key, value, node):
 	if node:
+		ur_lib.ur_just_dirty_the_editor()
 		if key == 'name' and value is String and not value.empty():
 			var old_name = node.name
 			node.name = value
@@ -207,8 +210,10 @@ func _on_node_data_inspector_changed(key, value, node):
 		if key == 'sub_state_machine':
 			if value:
 				node.data.sub_state_machine = sm_resource.gen_state_machine_data()
+				node.right_button_tex = icon_tex
 			else:
 				node.data.sub_state_machine = null
+				node.right_button_tex = null
 		if key == 'init':
 			if value:
 				node.data.init = true

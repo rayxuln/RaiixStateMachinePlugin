@@ -27,3 +27,8 @@ func _ur_create_state_machine_resource_undo():
 	the_editor.state_machine.state_machine_resource = null
 	the_editor.refresh_inspector()
 	the_editor.select_state_machine_node(the_editor.state_machine)
+
+
+func ur_just_dirty_the_editor():
+	the_ur.create_action("State Machine Resource Dirty")
+	the_ur.commit_action()
