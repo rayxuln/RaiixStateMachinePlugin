@@ -8,6 +8,7 @@ signal about_to_remove_node(node)
 signal select_node(node)
 signal unselect_node(node)
 signal node_reight_button_pressed(node)
+signal node_double_pressed(node)
 
 export(Vector2) var scroll_offset = Vector2.ZERO setget _on_set_scroll_offset
 func _on_set_scroll_offset(v):
@@ -117,6 +118,7 @@ func add_node(n:Node):
 	n.connect("mouse_entered", self, "_on_node_mouse_entered", [n])
 	n.connect("mouse_exited", self, "_on_node_mouse_exited", [n])
 	n.connect("right_button_pressed", self, "_on_node_right_button_pressed", [n])
+	n.connect("double_pressed", self, "_on_node_double_pressed", [n])
 
 	return n
 
@@ -314,6 +316,9 @@ func _on_node_mouse_exited(node):
 
 func _on_node_right_button_pressed(node):
 	emit_signal("node_reight_button_pressed", node)
+
+func _on_node_double_pressed(node):
+	emit_signal("node_double_pressed", node)
 
 func _on_GraphEdit_resized():
 	yield(get_tree(), "idle_frame")

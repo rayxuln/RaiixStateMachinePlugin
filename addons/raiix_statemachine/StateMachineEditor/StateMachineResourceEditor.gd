@@ -260,6 +260,12 @@ func _on_GraphEdit_node_reight_button_pressed(node):
 	generate_nodes_and_connections_with_resource()
 	generate_path_buttons_from_path(self.sm_resource.path)
 
+# open state script
+func _on_GraphEdit_node_double_pressed(node):
+	if node.data.script:
+		editor_plugin.get_editor_interface().select_file(node.data.script)
+
+
 func _on_node_data_inspector_changed(key, value, node):
 	if node:
 		ur_lib.ur_just_dirty_the_editor()
@@ -332,7 +338,4 @@ func _on_arrow_data_inspector_changed(key, value, arrow):
 			arrow.update()
 			yield(get_tree(), "idle_frame")
 			graph_edit._update_rows_position()
-
-
-
 

@@ -5,6 +5,7 @@ signal picked_up(node)
 signal picked_down(node)
 signal pressed(node)
 signal right_button_pressed
+signal double_pressed
 
 export(Vector2) var offset = Vector2.ZERO setget _on_set_offset
 func _on_set_offset(v):
@@ -95,6 +96,8 @@ func _gui_input(event):
 		if not event.pressed and event.button_index == BUTTON_LEFT:
 			picking = false
 			emit_signal("picked_down", self)
+		if event.pressed and event.button_index == BUTTON_LEFT and event.doubleclick:
+			emit_signal("double_pressed")
 
 func graph_node_type():
 	pass

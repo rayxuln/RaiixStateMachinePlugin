@@ -23,6 +23,8 @@ func _enter():
 		var sm = get_child(0)
 		sm.agent_path = self.agent.get_path_to(sm)
 		sm.start()
+	
+	enter()
 
 func _tick(agent, state_machine, delta):
 	tick(agent, state_machine, delta)
@@ -30,9 +32,19 @@ func _tick(agent, state_machine, delta):
 func _exit():
 	if get_child_count() > 0:
 		get_child(0).stop()
+	
+	exit()
 
 #----- Public Methods-----
 
 # override
+func enter():
+	pass
+
+# override
 func tick(agent, state_machine, delta):
+	pass
+
+# override
+func exit():
 	pass

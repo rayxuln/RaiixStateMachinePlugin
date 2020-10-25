@@ -7,15 +7,15 @@
 
 [sub_resource type="Resource" id=11]
 script = ExtResource( 2 )
-zoom = 0.800021
-scroll_offset = Vector2( -502.039, -248.809 )
+zoom = 0.999993
+scroll_offset = Vector2( -409.053, -269.612 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
 "states": [ {
 "init": true,
 "name": "idle",
-"offset": Vector2( -69.6694, -115.334 ),
+"offset": Vector2( -119.67, -97.334 ),
 "script": "res://scenes/states/idle.gd",
 "sub_state_machine": null
 }, {
