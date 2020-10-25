@@ -1,8 +1,10 @@
+tool
 extends HBoxContainer
 
 
 signal text_changed(text)
 signal text_entered(text)
+signal request_remove()
 
 export(String) var text:String setget _on_set_text, _on_get_text
 func _on_set_text(v):
@@ -48,3 +50,7 @@ func _on_LineEdit_focus_entered():
 
 func _on_LineEdit_focus_exited():
 	emit_signal("focus_exited")
+
+
+func _on_RemoveButton_pressed():
+	emit_signal("request_remove")

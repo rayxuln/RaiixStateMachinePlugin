@@ -308,6 +308,7 @@ func _on_node_mouse_exited(node):
 
 
 func _on_GraphEdit_resized():
+	yield(get_tree(), "idle_frame")
 	_update_nodes_position()
 	yield(get_tree(), "idle_frame")
 	_update_rows_position()

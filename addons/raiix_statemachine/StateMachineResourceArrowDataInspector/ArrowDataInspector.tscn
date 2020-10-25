@@ -47,12 +47,11 @@ margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "From"
 
-[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/From"]
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/VBoxContainer/From"]
 margin_left = 504.0
 margin_right = 1004.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "Choose..."
 
 [node name="To" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_top = 24.0
@@ -66,12 +65,11 @@ margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "To"
 
-[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/To"]
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/VBoxContainer/To"]
 margin_left = 504.0
 margin_right = 1004.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "Choose..."
 
 [node name="Conds" type="VBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_top = 48.0
@@ -106,12 +104,13 @@ custom_constants/separation = 15
 alignment = 2
 
 [node name="AddButton" type="Button" parent="VBoxContainer/VBoxContainer/Conds/HBoxContainer"]
-margin_left = 829.0
-margin_right = 866.0
+margin_left = 908.0
+margin_right = 945.0
 margin_bottom = 20.0
 text = "Add"
 
 [node name="RemoveButton" type="Button" parent="VBoxContainer/VBoxContainer/Conds/HBoxContainer"]
+visible = false
 margin_left = 881.0
 margin_right = 945.0
 margin_bottom = 20.0
@@ -123,6 +122,8 @@ margin_left = 960.0
 margin_right = 1004.0
 margin_bottom = 20.0
 text = "Clear"
+[connection signal="item_selected" from="VBoxContainer/VBoxContainer/From/OptionButton" to="." method="_on_From_OptionButton_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/VBoxContainer/To/OptionButton" to="." method="_on_To_OptionButton_item_selected"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/ClearButton" to="." method="_on_ClearButton_pressed"]

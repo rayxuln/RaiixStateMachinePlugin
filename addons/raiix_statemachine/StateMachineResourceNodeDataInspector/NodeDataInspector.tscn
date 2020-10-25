@@ -12,7 +12,6 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -33,7 +32,7 @@ valign = 1
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 39.0
 margin_right = 1012.0
-margin_bottom = 149.0
+margin_bottom = 177.0
 
 [node name="Name" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_right = 1012.0
@@ -102,10 +101,32 @@ margin_bottom = 24.0
 size_flags_horizontal = 3
 text = "On"
 
-[node name="Init" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+[node name="SubMaxStateStackSize" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 margin_top = 86.0
 margin_right = 1012.0
 margin_bottom = 110.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/SubMaxStateStackSize"]
+margin_top = 5.0
+margin_right = 504.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Max State Stack Size"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/VBoxContainer/SubMaxStateStackSize"]
+margin_left = 508.0
+margin_right = 1012.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+rounded = true
+allow_greater = true
+
+[node name="Init" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 114.0
+margin_right = 1012.0
+margin_bottom = 138.0
 
 [node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/Init"]
 margin_top = 5.0
@@ -122,6 +143,7 @@ size_flags_horizontal = 3
 text = "On"
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -140,4 +162,5 @@ valign = 1
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Script/HBoxContainer/Button" to="." method="_on_Script_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Script/HBoxContainer/ClearButton" to="." method="_on_ClearButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/VBoxContainer/SubStateMachine/CheckBox" to="." method="_on_SubStateMachine_CheckBox_toggled"]
+[connection signal="value_changed" from="VBoxContainer/VBoxContainer/SubMaxStateStackSize/SpinBox" to="." method="_on_SpinBox_value_changed"]
 [connection signal="toggled" from="VBoxContainer/VBoxContainer/Init/CheckBox" to="." method="_on_Init_CheckBox_toggled"]

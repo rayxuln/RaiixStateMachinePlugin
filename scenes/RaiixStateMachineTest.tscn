@@ -1,8 +1,41 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachine/StateMachine.gd" type="Script" id=1]
+[ext_resource path="res://addons/raiix_statemachine/StateMachineResource/StateMachineResource.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
+
+[sub_resource type="Resource" id=11]
+script = ExtResource( 2 )
+zoom = 0.800016
+scroll_offset = Vector2( -133.12, -108.883 )
+data = {
+"max_state_stack_size": 1,
+"states": [ {
+"init": false,
+"name": "idle",
+"offset": Vector2( 229.498, 388.498 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "run",
+"offset": Vector2( 926.006, 381.501 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "state",
+"offset": Vector2( 953.107, 117.362 ),
+"script": null,
+"sub_state_machine": null
+} ],
+"transitions": [ {
+"cond": [ "dead == true" ],
+"from": "idle",
+"to": "state"
+} ]
+}
 
 [sub_resource type="AnimationNodeAnimation" id=2]
 animation = "idle"
@@ -64,6 +97,7 @@ script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
 enable = true
+state_machine_resource = SubResource( 11 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 7 )

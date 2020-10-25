@@ -166,6 +166,23 @@ func update_point_pos_with_nodes():
 	self.start_position = s_p + offset
 	self.end_position = e_p + offset
 
+func update_from_data(graph_node):
+	var s = graph_node.nodes.get_node_or_null(data.from)
+	var e = graph_node.nodes.get_node_or_null(data.to)
+	if s == null:
+		printerr("%s state node does not exists!" % data.from)
+	if e == null:
+		printerr("%s state node does not exists!" % data.to)
+	
+	start_node = s
+	end_node = e
+	
+	update_point_pos_with_nodes()
+	
+	self.condition_text = data.cond[0] if data.cond.size() > 0 else ""
+	
+	update()
+
 #------ Singals ------
 func _on_start_node_rect_changed():
 	if end_node:

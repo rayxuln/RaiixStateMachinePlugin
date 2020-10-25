@@ -7,6 +7,7 @@ var state_machine_resource_editor:Control = null
 
 var script_select_dialog:Control = null
 var node_data_inspector:Control = null
+var arrow_data_inspector:Control = null
 
 func _enter_tree():
 	get_editor_interface().get_selection().connect("selection_changed", self, "_on_selecton_changed")
@@ -17,14 +18,20 @@ func _enter_tree():
 	
 	node_data_inspector = preload("./StateMachineResourceNodeDataInspector/NodeDataInspector.tscn").instance()
 	node_data_inspector.editor_plugin = self
-	#add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, node_data_inspector)
-
+	node_data_inspector.notification(NOTIFICATION_READY)
+	
+	arrow_data_inspector = preload("./StateMachineResourceArrowDataInspector/ArrowDataInspector.tscn").instance()
+	arrow_data_inspector.editor_plugin = self
+	arrow_data_inspector.notification(NOTIFICATION_READY)
+	
 func _exit_tree():
 	script_select_dialog.queue_free()
 	
-	#remove_control_from_docks(node_data_inspector)
 	node_data_inspector.uninspect()
 	node_data_inspector.queue_free()
+	
+	arrow_data_inspector.uninspect()
+	arrow_data_inspector.queue_free()
 	
 	remove_state_machine_resource_editor()
 	
@@ -40,6 +47,7 @@ func add_state_machine_resource_edtor():
 func remove_state_machine_resource_editor():
 	if state_machine_resource_editor:
 		node_data_inspector.uninspect()
+		arrow_data_inspector.uninspect()
 		remove_control_from_bottom_panel(state_machine_resource_editor)
 		state_machine_resource_editor.free()
 		

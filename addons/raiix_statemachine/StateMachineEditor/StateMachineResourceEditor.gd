@@ -164,9 +164,11 @@ func _on_GraphEdit_about_to_remove_node(n):
 		if arrow.start_node == n or arrow.end_node == n:
 			self.sm_resource.current.transitions.erase(arrow.data)
 	editor_plugin.node_data_inspector.uninspect()
+	editor_plugin.arrow_data_inspector.uninspect()
 	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
 			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
-
+	if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
 
 
 func _on_GraphEdit_select_node(node):
@@ -179,13 +181,28 @@ func _on_GraphEdit_select_node(node):
 		editor_plugin.node_data_inspector.uninspect()
 		if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
 			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
+			
+	if graph_edit.selection.size() == 1 and node.has_method("graph_arrow_type"):
+		if not editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+			editor_plugin.arrow_data_inspector.connect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed", [node])
+		var states = []
+		for s in sm_resource.current.states:
+			states.append(s.name)
+		editor_plugin.arrow_data_inspector.inspect(node.data, states)
+	else:
+		editor_plugin.arrow_data_inspector.uninspect()
+		if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
+
 		
 
 func _on_GraphEdit_unselect_node(node):
 	editor_plugin.node_data_inspector.uninspect()
+	editor_plugin.arrow_data_inspector.uninspect()
 	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
 			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
-
+	if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
 
 func _on_node_data_inspector_changed(key, value, node):
 	if node:
@@ -205,16 +222,19 @@ func _on_node_data_inspector_changed(key, value, node):
 					t.to = value
 				if t.from == old_name:
 					t.from = value
-		if key == 'script':
+		elif key == 'script':
 			node.data.script = value
-		if key == 'sub_state_machine':
+		elif key == 'sub_state_machine':
 			if value:
 				node.data.sub_state_machine = sm_resource.gen_state_machine_data()
 				node.right_button_tex = icon_tex
+				
+				# set back to the inspector
+				editor_plugin.node_data_inspector.set_max_state_stack_size_spin_box_value(node.data.sub_state_machine.max_state_stack_size)
 			else:
 				node.data.sub_state_machine = null
 				node.right_button_tex = null
-		if key == 'init':
+		elif key == 'init':
 			if value:
 				node.data.init = true
 				node.tip_text = 'Init'
@@ -226,6 +246,34 @@ func _on_node_data_inspector_changed(key, value, node):
 			else:
 				node.data.init = false
 				node.tip_text = ''
+		elif key == 'max_state_stack_size':
+			node.data.sub_state_machine.max_state_stack_size = value
 
-
+func _on_arrow_data_inspector_changed(key, value, arrow):
+	if arrow:
+		ur_lib.ur_just_dirty_the_editor()
+		if key == 'from':
+			arrow.data.from = value
+			arrow.update_from_data(graph_edit)
+			# force update
+			yield(get_tree(), "idle_frame")
+			arrow.update()
+			yield(get_tree(), "idle_frame")
+			graph_edit._update_rows_position()
+		elif key == 'to':
+			arrow.data.to = value
+			arrow.update_from_data(graph_edit)
+			# force update
+			yield(get_tree(), "idle_frame")
+			arrow.update()
+			yield(get_tree(), "idle_frame")
+			graph_edit._update_rows_position()
+		elif key == 'cond':
+			arrow.data.cond = value.duplicate()
+			arrow.update_from_data(graph_edit)
+			# force update
+			yield(get_tree(), "idle_frame")
+			arrow.update()
+			yield(get_tree(), "idle_frame")
+			graph_edit._update_rows_position()
 

@@ -59,10 +59,6 @@ _global_script_class_icons={
 config/name="State Machine Transition Condition Syntax"
 config/icon="res://icon.png"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "raiix_statemachine" )
-
 [input]
 
 change={
