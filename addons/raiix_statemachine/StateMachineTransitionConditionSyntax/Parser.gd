@@ -12,7 +12,7 @@ class_name SMTCSParser
 # term4 => term5 | term4 q4_op term5
 # term5 => uni_op term6
 # term6 => term7 [ expr ]
-# term7 => term8 | term7 . identity
+# term7 => term8 | term7.identity | term7.identity ( args )
 # term8 => null | number | string | boolean | array | object | ( expr ) | identity | identity ( args )
 # args => expr | args , expr
 
@@ -36,6 +36,7 @@ enum AST_NODE_TYPE {
 	ARRAY,
 	OBJECT,
 	FUNC,
+	OBJ_FUNC,
 	NULL,
 	NUMBER,
 	STRING,
@@ -139,6 +140,12 @@ func gen_ast_node_func(func_name, arg_list):
 	var res = gen_ast_node(AST_NODE_TYPE.FUNC)
 	res.func_name = func_name
 	res.arg_list = arg_list
+	return res
+
+func gen_ast_node_obj_func(obj, func_name, arg_list):
+	var res = gen_ast_node_func(func_name, arg_list)
+	res.type = AST_NODE_TYPE.OBJ_FUNC
+	res.obj = obj
 	return res
 
 func gen_ast_node_literal(type=AST_NODE_TYPE.NULL, value=null):
@@ -311,7 +318,27 @@ func _term7():
 			
 			next = lexemer.get_next()
 			if check_is_identity(next):
-				l = gen_ast_node_binary(l, next.value, op)
+				
+				# check if a func call
+				if check_is_char(lexemer.view_next(), '('):
+					var func_name = next.value
+					
+					lexemer.get_next()
+					var arg_list = []
+					next = lexemer.view_next()
+					if next and not check_is_char(next, ')'):
+						arg_list = _args()
+					next = lexemer.get_next()
+					if check_is_char(next, ')'):
+						if check_is_literal(lexemer.view_next()):
+							lexemer.error("Syntax error: redundant literal " + lexemer.view_next().value)
+							return null
+						l = gen_ast_node_obj_func(l, func_name, arg_list)
+					else:
+						lexemer.error("Syntax error: expected )")
+						return null
+				else:
+					l = gen_ast_node_binary(l, next.value, op)
 			else:
 				lexemer.error("Syntax error: something missing on the right of " + op)
 				return null

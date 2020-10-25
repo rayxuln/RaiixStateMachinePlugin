@@ -7,30 +7,68 @@
 
 [sub_resource type="Resource" id=11]
 script = ExtResource( 2 )
-zoom = 1.39999
-scroll_offset = Vector2( -47.6999, -236.369 )
+zoom = 0.800021
+scroll_offset = Vector2( -502.039, -248.809 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
 "states": [ {
 "init": true,
 "name": "idle",
-"offset": Vector2( 23.9974, 10.9992 ),
+"offset": Vector2( -69.6694, -115.334 ),
 "script": "res://scenes/states/idle.gd",
 "sub_state_machine": null
 }, {
 "init": false,
 "name": "run",
-"offset": Vector2( 793.893, 3.86929 ),
+"offset": Vector2( 683.468, -117.987 ),
 "script": "res://scenes/states/run.gd",
+"sub_state_machine": {
+"max_state_stack_size": 1,
+"states": [ {
+"init": true,
+"name": "idle",
+"offset": Vector2( -23.9774, -137.072 ),
+"script": "res://scenes/states/sub_states/idle.gd",
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "run",
+"offset": Vector2( 716.035, -137.072 ),
+"script": "res://scenes/states/sub_states/run.gd",
 "sub_state_machine": null
 } ],
 "transitions": [ {
-"cond": [ "is_change_action_pressed()" ],
+"cond": [  ],
 "from": "idle",
 "to": "run"
 }, {
 "cond": [  ],
+"from": "run",
+"to": "idle"
+} ]
+}
+}, {
+"init": false,
+"name": "back",
+"offset": Vector2( 328.597, 418.869 ),
+"script": null,
+"sub_state_machine": null
+} ],
+"transitions": [ {
+"cond": [ "agent.is_change_action_pressed()" ],
+"from": "idle",
+"to": "run"
+}, {
+"cond": [ "agent.is_back_action_preesed()" ],
+"from": "run",
+"to": "back"
+}, {
+"cond": [ "agent.is_back_action_preesed()" ],
+"from": "idle",
+"to": "back"
+}, {
+"cond": [ "agent.is_change_action_pressed()" ],
 "from": "run",
 "to": "idle"
 } ]

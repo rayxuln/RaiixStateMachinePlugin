@@ -63,7 +63,7 @@ func _process(delta):
 			if ts is Array:
 				for t in ts:
 					if t.cond:
-						if SMTCS.eval(t.cond, agent):
+						if SMTCS.eval(t.cond, current_state):
 							if change_state(t.to_state):
 								break
 					else:

@@ -33,6 +33,17 @@ static func _eval(ast, agent:Node, built_in_lib:Reference):
 			printerr("Sematic error: unkown method " + ast.func_name)
 			return null
 	
+	if ast.type == SMTCSParser.AST_NODE_TYPE.OBJ_FUNC:
+		var obj = _eval(ast.obj, agent, built_in_lib)
+		var arg_list_v = []
+		if obj.has_method(ast.func_name):
+			for arg in ast.arg_list:
+				arg_list_v.append(_eval(arg, agent, built_in_lib))
+			return obj.callv(ast.func_name, arg_list_v)
+		else:
+			printerr("Sematic error: unkown method " + ast.func_name)
+			return null
+	
 	if ast.type == SMTCSParser.AST_NODE_TYPE.TERNARY:
 		var cond = _eval(ast.children[0], agent, built_in_lib)
 		var l = _eval(ast.children[1], agent, built_in_lib)

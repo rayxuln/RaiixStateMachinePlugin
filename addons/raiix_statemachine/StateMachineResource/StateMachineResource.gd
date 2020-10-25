@@ -96,6 +96,8 @@ func _generate_state_machine_from_state_machine_date(sm_data):
 func _generate_states_from_state_machine_data(state_machine:StateMachine, sm_data):
 	# add states
 	for state in sm_data.states:
+		if state.name == 'back':
+			continue
 		var state_node = State.new()
 		state_node.name = state.name
 		if state.script != null:
