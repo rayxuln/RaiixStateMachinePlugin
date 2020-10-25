@@ -7,6 +7,7 @@ onready var graph_edit_container = $GraphEditContainer
 onready var graph_edit = $GraphEditContainer/GraphEdit
 onready var info_container = $InfoContainer
 onready var info_label = $InfoContainer/VBoxContainer/InfoLabel
+onready var path_button_container = $GraphEditContainer/HBoxContainer/PathButtonContainer
 
 var arrow_placing_start_node = null
 
@@ -65,12 +66,47 @@ func select_state_machine_node(sm):
 		graph_edit.scroll_offset = self.sm_resource.scroll_offset
 		self.sm_resource	.block_written = false
 		generate_nodes_and_connections_with_resource()
+		generate_path_buttons_from_path(self.sm_resource.path)
+
+func add_path_button(n, path):
+	var b = Button.new()
+	path_button_container.add_child(b)
+	b.name = n
+	b.text = n
+	b.set_meta("path", path)
+	b.connect("pressed", self, "_on_path_button_pressed", [b])
+
+func add_seperator():
+	var s = VSeparator.new()
+	path_button_container.add_child(s)
+
+func clear_path_button_caintainer():
+	if path_button_container.get_child_count() == 0:
+		return
+	var cs = []
+	for c in path_button_container.get_children():
+		cs.append(c)
+	for c in cs:
+		c.queue_free()
+
+func generate_path_buttons_from_path(path:String):
+	clear_path_button_caintainer()
+	add_path_button('root', '/')
+	var ss = path.split('/')
+	var temp = '/'
+	for s in ss:
+		if not s.empty():
+			temp += '/' + s
+			add_seperator()
+			add_path_button(s, temp)
 
 func refresh_inspector():
 	editor_plugin.get_editor_interface().get_inspector().refresh()
 
 func generate_nodes_and_connections_with_resource():
 	var sm_data = self.sm_resource.current
+	
+	graph_edit.clear_all_nodes()
 	
 	# gen nodes
 	for node_data in sm_data.states:
@@ -117,7 +153,31 @@ func remove_node(node:Control):
 	elif node.has_method("graph_arrow_type"):
 		self.sm_resource.current.transitions.erase(node.data)
 	graph_edit.remove_node(node)
+
+func inspect_node_data(node):
+	if not editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+		editor_plugin.node_data_inspector.connect("inspecting_data_changed", self, "_on_node_data_inspector_changed", [node])
 	
+	editor_plugin.node_data_inspector.inspect(node.name, node.data)
+
+func inspect_arrow_data(node):
+	if not editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+		editor_plugin.arrow_data_inspector.connect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed", [node])
+	var states = []
+	for s in self.sm_resource.current.states:
+		states.append(s.name)
+	editor_plugin.arrow_data_inspector.inspect(node.data, states)
+
+func uninspect_node_data():
+	editor_plugin.node_data_inspector.uninspect()
+	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
+			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
+
+func uninspect_arrow_data():
+	editor_plugin.arrow_data_inspector.uninspect()
+	if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
+			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
+
 #----- Signals -----
 
 func _on_GraphEdit_gui_input(event):
@@ -163,46 +223,42 @@ func _on_GraphEdit_about_to_remove_node(n):
 	for arrow in graph_edit.arrows.get_children():
 		if arrow.start_node == n or arrow.end_node == n:
 			self.sm_resource.current.transitions.erase(arrow.data)
-	editor_plugin.node_data_inspector.uninspect()
-	editor_plugin.arrow_data_inspector.uninspect()
-	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
-			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
-	if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
-			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
-
+	uninspect_arrow_data()
+	uninspect_node_data()
 
 func _on_GraphEdit_select_node(node):
 	if graph_edit.selection.size() == 1 and node.has_method("graph_node_type"):
-		if not editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
-			editor_plugin.node_data_inspector.connect("inspecting_data_changed", self, "_on_node_data_inspector_changed", [node])
-		
-		editor_plugin.node_data_inspector.inspect(node.name, node.data)
+		inspect_node_data(node)
 	else:
-		editor_plugin.node_data_inspector.uninspect()
-		if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
-			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
-			
+		uninspect_node_data()
 	if graph_edit.selection.size() == 1 and node.has_method("graph_arrow_type"):
-		if not editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
-			editor_plugin.arrow_data_inspector.connect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed", [node])
-		var states = []
-		for s in sm_resource.current.states:
-			states.append(s.name)
-		editor_plugin.arrow_data_inspector.inspect(node.data, states)
+		inspect_arrow_data(node)
 	else:
-		editor_plugin.arrow_data_inspector.uninspect()
-		if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
-			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
-
+		uninspect_arrow_data()
 		
 
 func _on_GraphEdit_unselect_node(node):
-	editor_plugin.node_data_inspector.uninspect()
-	editor_plugin.arrow_data_inspector.uninspect()
-	if editor_plugin.node_data_inspector.is_connected("inspecting_data_changed", self, "_on_node_data_inspector_changed"):
-			editor_plugin.node_data_inspector.disconnect("inspecting_data_changed", self, "_on_node_data_inspector_changed")
-	if editor_plugin.arrow_data_inspector.is_connected("inspecting_data_changed", self, "_on_arrow_data_inspector_changed"):
-			editor_plugin.arrow_data_inspector.disconnect("inspecting_data_changed", self, "_on_arrow_data_inspector_changed")
+	uninspect_arrow_data()
+	uninspect_node_data()
+
+func _on_path_button_pressed(button:Button):
+	uninspect_arrow_data()
+	uninspect_node_data()
+	
+	self.sm_resource.go_to(button.get_meta("path"))
+	
+	generate_nodes_and_connections_with_resource()
+	generate_path_buttons_from_path(self.sm_resource.path)
+
+# go to the sub state machine
+func _on_GraphEdit_node_reight_button_pressed(node):
+	uninspect_arrow_data()
+	uninspect_node_data()
+	
+	self.sm_resource.go_to(node.name)
+	
+	generate_nodes_and_connections_with_resource()
+	generate_path_buttons_from_path(self.sm_resource.path)
 
 func _on_node_data_inspector_changed(key, value, node):
 	if node:
@@ -217,7 +273,7 @@ func _on_node_data_inspector_changed(key, value, node):
 			editor_plugin.node_data_inspector.title = value
 			
 			# change all the name in transition
-			for t in sm_resource.current.transitions:
+			for t in self.sm_resource.current.transitions:
 				if t.to == old_name:
 					t.to = value
 				if t.from == old_name:
@@ -226,7 +282,7 @@ func _on_node_data_inspector_changed(key, value, node):
 			node.data.script = value
 		elif key == 'sub_state_machine':
 			if value:
-				node.data.sub_state_machine = sm_resource.gen_state_machine_data()
+				node.data.sub_state_machine = self.sm_resource.gen_state_machine_data()
 				node.right_button_tex = icon_tex
 				
 				# set back to the inspector
@@ -276,4 +332,7 @@ func _on_arrow_data_inspector_changed(key, value, arrow):
 			arrow.update()
 			yield(get_tree(), "idle_frame")
 			graph_edit._update_rows_position()
+
+
+
 

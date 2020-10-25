@@ -4,6 +4,7 @@ extends PanelContainer
 signal picked_up(node)
 signal picked_down(node)
 signal pressed(node)
+signal right_button_pressed
 
 export(Vector2) var offset = Vector2.ZERO setget _on_set_offset
 func _on_set_offset(v):
@@ -119,7 +120,7 @@ func _on_LeftButton_pressed():
 
 
 func _on_RightButton_pressed():
-	pass
+	emit_signal("right_button_pressed")
 
 
 func _on_LeftButton_button_down():

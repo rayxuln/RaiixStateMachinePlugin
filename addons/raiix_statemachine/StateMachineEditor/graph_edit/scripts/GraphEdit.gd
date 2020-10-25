@@ -7,6 +7,7 @@ signal editor_data_changed(e)
 signal about_to_remove_node(node)
 signal select_node(node)
 signal unselect_node(node)
+signal node_reight_button_pressed(node)
 
 export(Vector2) var scroll_offset = Vector2.ZERO setget _on_set_scroll_offset
 func _on_set_scroll_offset(v):
@@ -115,6 +116,7 @@ func add_node(n:Node):
 	n.connect("gui_input", self, "_on_node_gui_input", [n])
 	n.connect("mouse_entered", self, "_on_node_mouse_entered", [n])
 	n.connect("mouse_exited", self, "_on_node_mouse_exited", [n])
+	n.connect("right_button_pressed", self, "_on_node_right_button_pressed", [n])
 
 	return n
 
@@ -135,9 +137,13 @@ func remove_node(n:Control):
 	n.queue_free()
 
 func clear_all_nodes():
-	for a in arrows:
-		a.queue_free()
-	for n in nodes:
+	var ns = []
+	for a in arrows.get_children():
+		ns.append(a)
+	for n in nodes.get_children():
+		ns.append(n)
+	for n in ns:
+		n.get_parent().remove_child(n)
 		n.queue_free()
 
 func check_is_node_connected(start_node, end_node):
@@ -306,6 +312,8 @@ func _on_node_mouse_exited(node):
 	if arrow_placing_hovering_node == node:
 		arrow_placing_hovering_node = null
 
+func _on_node_right_button_pressed(node):
+	emit_signal("node_reight_button_pressed", node)
 
 func _on_GraphEdit_resized():
 	yield(get_tree(), "idle_frame")

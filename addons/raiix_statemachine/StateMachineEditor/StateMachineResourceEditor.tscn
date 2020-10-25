@@ -31,31 +31,25 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GraphEditContainer"]
 margin_right = 1008.0
-margin_bottom = 20.0
+margin_bottom = 14.0
 custom_constants/separation = 12
 
 [node name="Label" type="Label" parent="GraphEditContainer/HBoxContainer"]
-margin_top = 3.0
 margin_right = 32.0
-margin_bottom = 17.0
+margin_bottom = 14.0
 text = "Path:"
 valign = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GraphEditContainer/HBoxContainer"]
+[node name="PathButtonContainer" type="HBoxContainer" parent="GraphEditContainer/HBoxContainer"]
 margin_left = 44.0
-margin_right = 82.0
-margin_bottom = 20.0
-custom_constants/separation = 12
-
-[node name="Button" type="Button" parent="GraphEditContainer/HBoxContainer/HBoxContainer"]
-margin_right = 38.0
-margin_bottom = 20.0
-text = "root"
+margin_right = 44.0
+margin_bottom = 14.0
+custom_constants/separation = 5
 
 [node name="GraphEdit" parent="GraphEditContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 45.0
+margin_top = 39.0
 margin_right = 1008.0
 margin_bottom = 586.0
 
@@ -100,6 +94,7 @@ __meta__ = {
 [connection signal="editor_data_changed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_editor_data_changed"]
 [connection signal="gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_gui_input"]
 [connection signal="node_gui_input" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_gui_input"]
+[connection signal="node_reight_button_pressed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_reight_button_pressed"]
 [connection signal="select_node" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_select_node"]
 [connection signal="unselect_node" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_unselect_node"]
 [connection signal="pressed" from="InfoContainer/VBoxContainer/CreateSMRButton" to="." method="_on_CreateSMRButton_pressed"]

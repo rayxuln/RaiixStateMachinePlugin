@@ -7,33 +7,67 @@
 
 [sub_resource type="Resource" id=11]
 script = ExtResource( 2 )
-zoom = 0.800016
-scroll_offset = Vector2( -133.12, -108.883 )
+zoom = 0.999991
+scroll_offset = Vector2( -124.115, -118.132 )
 data = {
 "max_state_stack_size": 1,
 "states": [ {
 "init": false,
-"name": "idle",
-"offset": Vector2( 229.498, 388.498 ),
+"name": "state",
+"offset": Vector2( 111.998, 125 ),
 "script": null,
-"sub_state_machine": null
-}, {
-"init": false,
-"name": "run",
-"offset": Vector2( 926.006, 381.501 ),
-"script": null,
-"sub_state_machine": null
-}, {
+"sub_state_machine": {
+"max_state_stack_size": 1,
+"states": [ {
 "init": false,
 "name": "state",
-"offset": Vector2( 953.107, 117.362 ),
+"offset": Vector2( 574, 168 ),
+"script": null,
+"sub_state_machine": {
+"max_state_stack_size": 1,
+"states": [ {
+"init": false,
+"name": "state",
+"offset": Vector2( 72.9982, 123.999 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "state2",
+"offset": Vector2( 733.998, 82.9988 ),
 "script": null,
 "sub_state_machine": null
 } ],
 "transitions": [ {
-"cond": [ "dead == true" ],
-"from": "idle",
-"to": "state"
+"cond": [  ],
+"from": "state",
+"to": "state2"
+} ]
+}
+} ],
+"transitions": [  ]
+}
+}, {
+"init": false,
+"name": "state2",
+"offset": Vector2( 700.892, 91.87 ),
+"script": null,
+"sub_state_machine": {
+"max_state_stack_size": 1,
+"states": [  ],
+"transitions": [  ]
+}
+}, {
+"init": false,
+"name": "state3",
+"offset": Vector2( 509.89, 57.8698 ),
+"script": null,
+"sub_state_machine": null
+} ],
+"transitions": [ {
+"cond": [  ],
+"from": "state",
+"to": "state3"
 } ]
 }
 

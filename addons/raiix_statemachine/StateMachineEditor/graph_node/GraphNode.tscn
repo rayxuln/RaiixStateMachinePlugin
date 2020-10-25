@@ -32,7 +32,7 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="."]
-margin_right = 105.0
+margin_right = 54.0
 margin_bottom = 80.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 2 )
@@ -50,7 +50,7 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 105.0
+margin_right = 54.0
 margin_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -64,6 +64,7 @@ __meta__ = {
 }
 
 [node name="LeftButton" type="Button" parent="HBoxContainer"]
+visible = false
 margin_top = 30.0
 margin_right = 12.0
 margin_bottom = 50.0
@@ -72,15 +73,16 @@ flat = true
 align = 0
 
 [node name="MainTitle" type="Label" parent="HBoxContainer"]
-margin_left = 27.0
+margin_left = 1.0
 margin_top = 33.0
-margin_right = 78.0
+margin_right = 52.0
 margin_bottom = 47.0
 text = "Unkwon"
 align = 1
 valign = 1
 
 [node name="RightButton" type="Button" parent="HBoxContainer"]
+visible = false
 margin_left = 93.0
 margin_top = 30.0
 margin_right = 105.0
