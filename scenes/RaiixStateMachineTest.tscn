@@ -1,48 +1,13 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/raiix_statemachine/StateMachine/StateMachine.gd" type="Script" id=1]
-[ext_resource path="res://addons/raiix_statemachine/StateMachineResource/StateMachineResource.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
 
-[sub_resource type="Resource" id=1]
-script = ExtResource( 2 )
-zoom = 1.00005
-scroll_offset = Vector2( -185.112, -99.9097 )
-data = {
-"max_state_stack_size": 1,
-"states": [ {
-"init": true,
-"name": "idle",
-"offset": Vector2( 15.0055, 4.00689 ),
-"script": null,
-"sub_state_machine": {
-"max_state_stack_size": 1,
-"states": [  ],
-"transitions": [  ]
-}
-}, {
-"init": false,
-"name": "run",
-"offset": Vector2( 778.015, 76.0031 ),
-"script": null,
-"sub_state_machine": null
-} ],
-"transitions": [ {
-"cond": null,
-"from": "idle",
-"to": "run"
-}, {
-"cond": null,
-"from": "run",
-"to": "idle"
-} ]
-}
-
-[sub_resource type="AnimationNodeAnimation" id=3]
+[sub_resource type="AnimationNodeAnimation" id=2]
 animation = "idle"
 
-[sub_resource type="AnimationNodeStateMachine" id=2]
+[sub_resource type="AnimationNodeStateMachine" id=3]
 
 [sub_resource type="AnimationNodeAnimation" id=4]
 animation = "idle"
@@ -56,14 +21,15 @@ switch_mode = 2
 auto_advance = true
 
 [sub_resource type="AnimationNodeStateMachine" id=7]
-states/89/node = SubResource( 3 )
+states/89/node = SubResource( 2 )
 states/89/position = Vector2( 433.5, 61.5 )
-states/StateMachine/node = SubResource( 2 )
+states/StateMachine/node = SubResource( 3 )
 states/StateMachine/position = Vector2( 408.5, 168.5 )
 states/idle/node = SubResource( 4 )
 states/idle/position = Vector2( 219.5, 67 )
 transitions = [ "idle", "89", SubResource( 5 ), "89", "idle", SubResource( 6 ) ]
 start_node = "idle"
+graph_offset = Vector2( 50, -28 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=8]
 
@@ -98,7 +64,6 @@ script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
 enable = true
-state_machine_resource = SubResource( 1 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 7 )

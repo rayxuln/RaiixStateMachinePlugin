@@ -40,7 +40,7 @@ func gen_transition_data():
 	return {
 		"from": "",
 		"to": "",
-		"cond": null
+		"cond": []
 	}
 
 func update_editor_data(e):

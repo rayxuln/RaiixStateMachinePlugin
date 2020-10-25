@@ -175,7 +175,7 @@ func connect_nodes(start_node:Control, end_node:Control, data):
 	a.data = data
 	a.start_node = start_node
 	a.end_node = end_node
-	a.condition_text = data.cond
+	a.condition_text = data.cond[0] if data.cond.size() > 0 else ""
 	
 	
 	a.update_point_pos_with_nodes()

@@ -90,7 +90,7 @@ func pause():
 
 func resume():
 	enable = true
-
+# TODO: trange the cond to array
 func _transition(from_state, to_state, cond=null):
 	return {
 		"from_state": from_state,

@@ -1,0 +1,128 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/raiix_statemachine/StateMachineResourceArrowDataInspector/scripts/ArrowDataInspector.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.14902, 0.172549, 0.231373, 1 )
+
+[node name="ArrowDataInspector" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 9.0
+margin_top = 8.0
+margin_right = -11.0
+margin_bottom = -9.0
+custom_constants/separation = 25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 14.0
+text = "From xx to xx"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 39.0
+margin_right = 1004.0
+margin_bottom = 583.0
+size_flags_vertical = 3
+
+[node name="From" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 20.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/From"]
+margin_top = 3.0
+margin_right = 500.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "From"
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/From"]
+margin_left = 504.0
+margin_right = 1004.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Choose..."
+
+[node name="To" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 24.0
+margin_right = 1004.0
+margin_bottom = 44.0
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/To"]
+margin_top = 3.0
+margin_right = 500.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "To"
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/To"]
+margin_left = 504.0
+margin_right = 1004.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Choose..."
+
+[node name="Conds" type="VBoxContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 48.0
+margin_right = 1004.0
+margin_bottom = 544.0
+size_flags_vertical = 3
+custom_constants/separation = 15
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/Conds"]
+margin_right = 1004.0
+margin_bottom = 14.0
+text = "Conditions"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/VBoxContainer/Conds"]
+margin_top = 29.0
+margin_right = 1004.0
+margin_bottom = 461.0
+size_flags_vertical = 3
+custom_styles/bg = SubResource( 1 )
+scroll_horizontal_enabled = false
+
+[node name="List" type="VBoxContainer" parent="VBoxContainer/VBoxContainer/Conds/ScrollContainer"]
+margin_right = 1004.0
+size_flags_horizontal = 3
+custom_constants/separation = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer/Conds"]
+margin_top = 476.0
+margin_right = 1004.0
+margin_bottom = 496.0
+custom_constants/separation = 15
+alignment = 2
+
+[node name="AddButton" type="Button" parent="VBoxContainer/VBoxContainer/Conds/HBoxContainer"]
+margin_left = 829.0
+margin_right = 866.0
+margin_bottom = 20.0
+text = "Add"
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/VBoxContainer/Conds/HBoxContainer"]
+margin_left = 881.0
+margin_right = 945.0
+margin_bottom = 20.0
+disabled = true
+text = "Remove"
+
+[node name="ClearButton" type="Button" parent="VBoxContainer/VBoxContainer/Conds/HBoxContainer"]
+margin_left = 960.0
+margin_right = 1004.0
+margin_bottom = 20.0
+text = "Clear"
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Conds/HBoxContainer/ClearButton" to="." method="_on_ClearButton_pressed"]
