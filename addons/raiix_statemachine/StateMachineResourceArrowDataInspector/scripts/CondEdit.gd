@@ -4,6 +4,7 @@ extends HBoxContainer
 
 signal text_changed(text)
 signal text_entered(text)
+signal order_changed
 signal request_remove()
 
 export(String) var text:String setget _on_set_text, _on_get_text
@@ -26,6 +27,7 @@ func _on_UpButton_pressed():
 	if new_pos >= 0:
 		p.move_child(self, new_pos)
 		$VBoxContainer/UpButton.release_focus()
+		emit_signal("order_changed")
 
 
 func _on_DownButton_pressed():
@@ -34,6 +36,7 @@ func _on_DownButton_pressed():
 	if new_pos < p.get_child_count():
 		p.move_child(self, new_pos)
 		$VBoxContainer/DownButton.release_focus()
+		emit_signal("order_changed")
 
 
 func _on_LineEdit_text_changed(new_text):

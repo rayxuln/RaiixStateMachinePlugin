@@ -9,6 +9,8 @@ var script_select_dialog:Control = null
 var node_data_inspector:Control = null
 var arrow_data_inspector:Control = null
 
+var remote_debug_server:Node = null
+
 func _enter_tree():
 	get_editor_interface().get_selection().connect("selection_changed", self, "_on_selecton_changed")
 	get_editor_interface().get_inspector().connect("property_edited", self, "_on_inspector_property_edited")
@@ -24,6 +26,16 @@ func _enter_tree():
 	arrow_data_inspector.editor_plugin = self
 	arrow_data_inspector.notification(NOTIFICATION_READY)
 	
+	var temp = preload("./RemoteDebug/RemoteDebugClient.gd") as Script
+	add_autoload_singleton("RemoteDebugClient", temp.resource_path)
+	
+	
+
+func _ready():
+	remote_debug_server = preload("./RemoteDebug/RemoteDebugServer.gd").new()
+	add_child(remote_debug_server)
+	
+
 func _exit_tree():
 	script_select_dialog.queue_free()
 	
@@ -35,6 +47,7 @@ func _exit_tree():
 	
 	remove_state_machine_resource_editor()
 	
+	remove_autoload_singleton("RemoteDebugClient")
 
 #----- Methods ------
 func add_state_machine_resource_edtor():

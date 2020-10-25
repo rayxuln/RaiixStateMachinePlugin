@@ -79,6 +79,7 @@ func add_cond_edit(cond):
 	e.connect("focus_entered", self, "_on_cond_edit_focus_entered", [e])
 	e.connect("request_remove", self, "_on_cond_edit_request_remove", [e])
 	e.connect("text_changed", self, "_on_cond_edit_text_changed", [e])
+	e.connect("order_changed", self, "_on_cond_edit_order_changed", [e])
 
 	if not inspecting:
 		if current_cond_edit:
@@ -143,6 +144,10 @@ func _on_cond_edit_request_remove(e):
 		emit_signal("inspecting_data_changed", "cond", get_cond())
 
 func _on_cond_edit_text_changed(text, e):
+	if not inspecting:
+		emit_signal("inspecting_data_changed", "cond", get_cond())
+
+func _on_cond_edit_order_changed(e):
 	if not inspecting:
 		emit_signal("inspecting_data_changed", "cond", get_cond())
 

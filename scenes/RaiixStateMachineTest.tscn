@@ -5,10 +5,10 @@
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Player.gd" type="Script" id=4]
 
-[sub_resource type="Resource" id=11]
+[sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-zoom = 0.999993
-scroll_offset = Vector2( -409.053, -269.612 )
+zoom = 0.999994
+scroll_offset = Vector2( -263.841, -183.85 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
@@ -51,7 +51,7 @@ data = {
 }, {
 "init": false,
 "name": "back",
-"offset": Vector2( 328.597, 418.869 ),
+"offset": Vector2( 306.597, 262.868 ),
 "script": null,
 "sub_state_machine": null
 } ],
@@ -133,8 +133,9 @@ texture = ExtResource( 3 )
 script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
-enable = true
-state_machine_resource = SubResource( 11 )
+init_state_path = NodePath("idle")
+auto_start = false
+state_machine_resource = SubResource( 1 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
 tree_root = SubResource( 7 )
