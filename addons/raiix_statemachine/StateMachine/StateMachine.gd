@@ -44,6 +44,9 @@ export(bool) var auto_start:bool = true
 export(Resource) var state_machine_resource:Resource = null
 
 func _ready():
+	if state_machine_resource:
+		state_machine_resource.generate_states(self)
+	
 	if auto_start:
 		start()
 

@@ -86,6 +86,43 @@ func get_state_machine_data_from_path(p:String):
 				printerr("[SMR]Bad path: %s, can't find state %s" % [p, s])
 				return data
 	return temp
+
+func _generate_state_machine_from_state_machine_date(sm_data):
+	var state_machine = StateMachine.new()
+	state_machine.name = "StateMachine"
+	state_machine.max_state_stack_size = sm_data.max_state_stack_size
+	return state_machine
+
+func _generate_states_from_state_machine_data(state_machine:StateMachine, sm_data):
+	# add states
+	for state in sm_data.states:
+		var state_node = State.new()
+		state_node.name = state.name
+		if state.script != null:
+			state_node.set_script(load(state.script))
+		state_machine.add_child(state_node)
+		
+		if state.init:
+			state_machine.init_state_path = state.name
+		
+		if state.sub_state_machine != null:
+			var sub_state_machine_node = _generate_state_machine_from_state_machine_date(sm_data)
+			state_node.add_child(sub_state_machine_node)
+			
+			_generate_states_from_state_machine_data(sub_state_machine_node, state.sub_state_machine)
+	
+	# add transitions
+	for t in sm_data.transitions:
+		var conds = t.cond
+		if conds.size() > 0:
+			for c in conds:
+				state_machine.add_transition(t.from, t.to, c)
+		else:
+			state_machine.add_transition(t.from, t.to)
+
+func generate_states(state_machine:StateMachine):
+	_generate_states_from_state_machine_data(state_machine, data)
+
 #----- Signals ------
 func _on_state_machine_data_property_changed(sm):
 	data.init_state = sm.init_state_path
