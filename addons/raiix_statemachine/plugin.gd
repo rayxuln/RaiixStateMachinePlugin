@@ -109,6 +109,7 @@ func _on_open_remote_viewer(ud):
 	if not remote_viewer:
 		remote_viewer = preload("./StateMachineRemoteViewer/RemoteViewer.tscn").instance()
 		get_editor_interface().get_base_control().add_child(remote_viewer)
+		remote_viewer.editor_plugin = self
 		remote_viewer.connect("popup_hide", self, "_on_remote_viewer_hide")
 	remote_viewer.popup_centered()
 

@@ -55,7 +55,6 @@ func gen_request(n):
 		'name': n,
 		'data': {}
 	}
-#----- Respond -----
 func gen_respond(id, n):
 	return {
 		'type': VAR_PACKET_TYPE.RESPOND,
@@ -65,6 +64,7 @@ func gen_respond(id, n):
 		'msg': 'ok',
 		'data': {}
 	}
+#----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_"
 	var h_res = "h_res_"
@@ -125,6 +125,8 @@ func handle_var_packet(var_packet):
 	var handler_func = gen_handler_func(var_packet)
 	if self.has_method(handler_func):
 		call(handler_func, var_packet)
+	else:
+		printerr("Not match handler for \"%s\"" % handler_func)
 
 func release():
 	packet_peer = null

@@ -65,11 +65,6 @@ func gen_request(n):
 		'name': n,
 		'data': {}
 	}
-func request_set_client_id(client_peer):
-	var req = gen_request('set_client_id')
-	req.data.client_id = gen_client_id(client_peer)
-	send_var_packet(req, client_peer)
-#----- Respond -----
 func gen_respond(id, n):
 	return {
 		'type': VAR_PACKET_TYPE.RESPOND,
@@ -79,6 +74,11 @@ func gen_respond(id, n):
 		'msg': 'ok',
 		'data': {}
 	}
+func request_set_client_id(client_peer):
+	var req = gen_request('set_client_id')
+	req.data.client_id = gen_client_id(client_peer)
+	send_var_packet(req, client_peer)
+#----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_" # request handler
 	var h_res = "h_res_" # respond handler
@@ -116,6 +116,8 @@ func handle_var_packet(var_packet, client_peer:PacketPeerStream):
 	var handler_func = gen_handler_func(var_packet)
 	if self.has_method(handler_func):
 		call(handler_func, var_packet, client_peer)
+	else:
+		printerr("Not match handler for \"%s\"" % handler_func)
 
 func print_msg(msg:String):
 	print("[RDS]%s" % msg)
@@ -125,7 +127,7 @@ func print_err(msg:String):
 
 func gen_client_id(client_peer:PacketPeerStream):
 	var client = client_peer.stream_peer as StreamPeerTCP
-	return "%s:%d" % [client.get_connected_host(), client.get_connected_port()]
+	return "%s__%d" % [client.get_connected_host().replace('.', '_'), client.get_connected_port()]
 
 func get_client_peer(id:String):
 	for c in client_peers:
@@ -143,6 +145,12 @@ func decode_var(encoded_v:Array):
 	var encoded_bs:PoolByteArray = encoded_v[1]
 	var bs = encoded_bs.decompress(origin_size)
 	return bytes2var(bs, true)
+
+func get_all_client_id():
+	var res = []
+	for c in client_peers:
+		res.append(gen_client_id(c))
+	return res
 #----- Signals -----
 func _send_some():
 	var rand = ["Hi", "OK", "Fine"]
