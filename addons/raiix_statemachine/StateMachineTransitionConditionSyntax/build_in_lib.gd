@@ -1,9 +1,17 @@
 extends Reference
 
-var agent
+#var agent
+
+var _OS setget ,_on_get_OS
+func _on_get_OS():
+	return OS
+
+var _Input setget ,_on_get_Input
+func _on_get_Input():
+	return Input
 
 func _init(a=null):
-	agent = a
+	pass
 
 func _printf(s, f=[]):
 	print(str(s) % f)

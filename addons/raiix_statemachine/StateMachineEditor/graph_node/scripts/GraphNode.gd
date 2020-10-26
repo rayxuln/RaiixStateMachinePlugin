@@ -5,6 +5,7 @@ signal picked_up(node)
 signal picked_down(node)
 signal pressed(node)
 signal right_button_pressed
+signal left_button_pressed
 signal double_pressed
 
 export(Vector2) var offset = Vector2.ZERO setget _on_set_offset
@@ -75,6 +76,23 @@ func _on_set_hover(v):
 			panel_stylebox.shadow_color = _hover_shadow_color_save
 			panel_stylebox.shadow_size = 0
 
+export(Color) var active_shadow_color:Color = Color.aqua
+var active:bool = false setget _on_set_active
+var _active_shadow_color_save
+func _on_set_active(v):
+	var old = active
+	active = v
+	if old != active:
+		if panel == null:
+				yield(self, "ready")
+		if active:
+			_active_shadow_color_save = panel_stylebox.shadow_color
+			panel_stylebox.shadow_color = active_shadow_color
+			panel_stylebox.shadow_size = 5
+		else:
+			panel_stylebox.shadow_color = _active_shadow_color_save
+			panel_stylebox.shadow_size = 0
+
 func _ready():
 	panel_stylebox = panel_stylebox.duplicate()
 	panel.add_stylebox_override("panel", panel_stylebox)
@@ -113,13 +131,14 @@ func select():
 	get_parent().move_child(self, get_parent().get_child_count()-1)
 
 func unselect():
-	panel_stylebox.shadow_size = 0
+	if not active:
+		panel_stylebox.shadow_size = 0
 	selected = false
 
 
 
 func _on_LeftButton_pressed():
-	pass
+	emit_signal("left_button_pressed")
 
 
 func _on_RightButton_pressed():

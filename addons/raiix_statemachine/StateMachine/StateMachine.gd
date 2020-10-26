@@ -133,6 +133,9 @@ func state_stack_empty():
 	return state_stack_head == state_stack_tail and state_stack[state_stack_head] == null
 
 func change_state(new_state):
+	if not enable:
+		printerr("The state machine is not enable, can't change the state")
+		return
 	if new_state is String:
 		if new_state == 'back':
 			if state_stack_empty():
@@ -144,10 +147,12 @@ func change_state(new_state):
 			if current_state:
 				current_state._enter()
 			return
-		var s = get_node_or_null(new_state)
-		if s == null:
-			printerr("Change state fail, the %s state of %s is null." % [new_state, name])
-			return false
+		var s = null
+		if new_state != 'null':
+			s = get_node_or_null(new_state)
+			if s == null:
+				printerr("Change state fail, the %s state of %s is null." % [new_state, name])
+				return false
 		new_state = s
 	if current_state:
 		current_state._exit()
@@ -160,4 +165,4 @@ func change_state(new_state):
 func get_current_state_name():
 	if current_state:
 		return current_state.name
-	return "Null State"
+	return "null"

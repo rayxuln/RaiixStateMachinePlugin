@@ -93,11 +93,27 @@ func h_req_get_smr(req):
 	var smr = get_smr(req.data.sm_path)
 	if not smr:
 		res.code = -1
-		res.msg = "Can't not get smr of " + req.data.sm_path
+		res.msg = "Can't get smr of " + req.data.sm_path
 	else:
 		res.data.smr = smr
 	
 	send_var_packet(res)
+func h_req_get_sm_state(req):
+	var res = gen_respond(req.id, req.name)
+	
+	var sm = get_sm(req.data.sm_path)
+	if not sm:
+		res.code = -1
+		res.msg = "Can't get state machine node of " + req.data.sm_path
+	else:
+		res.data.state = sm.get_current_state_name()
+	
+	send_var_packet(res)
+func h_req_change_state(req):
+	var res = gen_respond(req.id, req.name)
+	
+	change_sm_state(req.data.sm_path, req.data.state)
+	
 #res
 #------ Methods ------
 func start_connecting():
@@ -197,13 +213,22 @@ func gen_tree_info():
 	
 	return root_node
 
+func get_sm(sm_path):
+	return get_tree().root.get_node(sm_path)
+
 func get_smr(sm_path):
-	var sm = get_tree().root.get_node(sm_path)
+	var sm = get_sm(sm_path)
 	if not sm:
 		return null
 	
 	return sm.state_machine_resource
-	
+
+func change_sm_state(sm_path, state):
+	var sm = get_sm(sm_path)
+	if sm:
+		sm.change_state(state)
+	else:
+		print_err("Try to change %s state to %s fail" % [sm_path, state])
 #------ Singals -------
 func _send_some():
 	var rand = ["Hi", "OK", "Fine"]

@@ -44,6 +44,10 @@ margin_bottom = 202.0
 text = "No Client Connected yet."
 
 [node name="UpdateTimer" type="Timer" parent="."]
+
+[node name="GetSMStateTimer" type="Timer" parent="."]
+wait_time = 0.2
 [connection signal="about_to_show" from="." to="." method="_on_RemoteViewer_about_to_show"]
 [connection signal="popup_hide" from="." to="." method="_on_RemoteViewer_popup_hide"]
 [connection signal="timeout" from="UpdateTimer" to="." method="_on_GetClientIDTimer_timeout"]
+[connection signal="timeout" from="GetSMStateTimer" to="." method="_on_GetSMStateTimer_timeout"]

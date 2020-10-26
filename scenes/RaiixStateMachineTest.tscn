@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
 zoom = 0.999994
-scroll_offset = Vector2( -447.842, -153.85 )
+scroll_offset = Vector2( -433.842, -165.85 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
@@ -134,7 +134,6 @@ script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
 init_state_path = NodePath("idle")
-auto_start = false
 state_machine_resource = SubResource( 1 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]

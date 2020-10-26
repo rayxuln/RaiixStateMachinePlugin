@@ -3,10 +3,13 @@ extends HSplitContainer
 
 
 signal node_double_clicked(node_path, is_sm, is_root)
+signal graph_node_left_button_pressed(node)
 
 var old_tree_info = null
 
-var icon_tex = preload("../../../images/edit_icon.png")
+var go_to_icon_tex = preload("../../../images/edit_icon.png")
+var play_icon_tex = preload("../../../images/play_icon.png")
+var pause_icon_tex = preload("../../../images/pause_icon.png")
 
 onready var tree = $VBoxContainer/Tree
 onready var graph_edit = $GraphEditContainer/GraphEdit
@@ -20,12 +23,17 @@ func _on_set_state_machine_resource(v):
 	if v:
 		graph_edit_container.visible = true
 		info_container.visible = false
+		
+		graph_edit.zoom = v.zoom
+		graph_edit.scroll_offset = v.scroll_offset
 		_load_state_machine_resource_to_graph_edit(v)
 	else:
 		graph_edit_container.visible = false
 		info_container.visible = true
 		
 		graph_edit.clear_all_nodes()
+
+var state_machine_node_path = ""
 
 func _ready():
 	graph_edit_container.visible = false
@@ -118,13 +126,40 @@ func update_tree(tree_root):
 	old_tree_info = tree_root
 	tree.update()
 
+func get_current_state_machine_path():
+	var r_path = state_machine_resource.path
+	var res = state_machine_node_path
+	var ss = r_path.split("/")
+	for s in ss:
+		if not s.empty():
+			res += '/' + s + '/StateMachine'
+#	print("The final sm path: " + res)
+	return res
+
+func change_node_left_button_state(node):
+	if node.get_meta("left_button_state") == "play":
+		node.set_meta("left_button_state", "stop")
+		node.left_button_tex = play_icon_tex
+		node.active = false
+	elif node.get_meta("left_button_state") == "stop":
+		node.set_meta("left_button_state", "play")
+		node.left_button_tex = pause_icon_tex
+		node.active = true
+
+func update_state(active_state):
+	for node in graph_edit.nodes.get_children():
+		if node.name == active_state:
+			if not node.active:
+				change_node_left_button_state(node)
+		else:
+			if node.active:
+				change_node_left_button_state(node)
+				
+
 func _load_state_machine_resource_to_graph_edit(sm_r):
 	var sm_data = sm_r.current
 	
 	graph_edit.clear_all_nodes()
-	
-	graph_edit.zoom = sm_r.zoom
-	graph_edit.scroll_offset = sm_r.scroll_offset
 	
 	# gen nodes
 	for node_data in sm_data.states:
@@ -135,7 +170,9 @@ func _load_state_machine_resource_to_graph_edit(sm_r):
 		n.text = node_data.name
 		n.offset = node_data.offset
 		n.data = node_data
-		n.right_button_tex = icon_tex if node_data.sub_state_machine else null
+		n.left_button_tex = play_icon_tex
+		n.set_meta("left_button_state", "stop") # stop | play
+		n.right_button_tex = go_to_icon_tex if node_data.sub_state_machine else null
 	
 	# connect nodes
 	for arrow_data in sm_data.transitions:
@@ -166,3 +203,19 @@ func _on_Tree_item_activated():
 			path = i.get_text(0) + '/' + path
 		i = i.get_parent()
 	emit_signal("node_double_clicked", path, is_sm, false)
+
+func _on_path_button_pressed(button):
+	state_machine_resource.go_to(button.get_meta("path"))
+	
+	_load_state_machine_resource_to_graph_edit(state_machine_resource)
+
+
+func _on_GraphEdit_node_reight_button_pressed(node):
+	state_machine_resource.go_to(node.name)
+	
+	_load_state_machine_resource_to_graph_edit(state_machine_resource)
+
+
+func _on_GraphEdit_node_left_button_pressed(node):
+#	change_node_left_button_state(node)
+	emit_signal("graph_node_left_button_pressed", node)

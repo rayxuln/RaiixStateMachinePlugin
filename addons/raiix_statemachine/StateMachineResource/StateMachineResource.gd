@@ -90,6 +90,8 @@ func get_state_machine_data_from_path(p:String):
 func _generate_state_machine_from_state_machine_date(sm_data):
 	var state_machine = StateMachine.new()
 	state_machine.name = "StateMachine"
+	state_machine.auto_start = false
+	state_machine.enable = false
 	state_machine.max_state_stack_size = sm_data.max_state_stack_size
 	return state_machine
 
