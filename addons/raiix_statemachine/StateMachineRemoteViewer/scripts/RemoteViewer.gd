@@ -117,6 +117,8 @@ func _on_GetSMStateTimer_timeout():
 	var tab = get_current_tab()
 	self.server.request_get_sm_state(tab.get_current_state_machine_path(), self.server.get_client_peer(client_id))
 	var state = yield(self.server, "res_get_sm_state")[0]
+	if not tab:
+		return
 	if state:
 #		print("Current state: " + state)
 		tab.update_state(state)

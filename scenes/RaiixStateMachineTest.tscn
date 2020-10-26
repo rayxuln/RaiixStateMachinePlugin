@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
 zoom = 0.999994
-scroll_offset = Vector2( -433.842, -165.85 )
+scroll_offset = Vector2( -439.842, -161.85 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
@@ -27,25 +27,25 @@ data = {
 "max_state_stack_size": 1,
 "states": [ {
 "init": true,
-"name": "idle",
+"name": "sub_idle",
 "offset": Vector2( -23.9774, -137.072 ),
 "script": "res://scenes/states/sub_states/idle.gd",
 "sub_state_machine": null
 }, {
 "init": false,
-"name": "run",
+"name": "sub_run",
 "offset": Vector2( 716.035, -137.072 ),
 "script": "res://scenes/states/sub_states/run.gd",
 "sub_state_machine": null
 } ],
 "transitions": [ {
 "cond": [  ],
-"from": "idle",
-"to": "run"
+"from": "sub_idle",
+"to": "sub_run"
 }, {
 "cond": [  ],
-"from": "run",
-"to": "idle"
+"from": "sub_run",
+"to": "sub_idle"
 } ]
 }
 }, {
