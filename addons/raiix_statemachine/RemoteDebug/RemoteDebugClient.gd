@@ -74,12 +74,20 @@ func gen_handler_func(packet):
 		return h_res + packet.name
 	printerr("Unkown packet type.")
 	return ""
+#req
 func h_req_set_client_id(req):
 	client_id = req.data.client_id
 	print_msg("Get id: %s" % client_id)
 	
 	var res = gen_respond(req.id, req.name)
 	send_var_packet(res)
+func h_req_get_tree_info(req):
+	var res = gen_respond(req.id, req.name)
+	
+	res.data.tree_info = gen_tree_info()
+	
+	send_var_packet(res)
+#res
 #------ Methods ------
 func start_connecting():
 	print_msg("RemoteDebugClient stated, connecting to %s:%d" % [server_addr, server_port])
@@ -133,10 +141,16 @@ func release():
 	stream_peer = null
 
 func print_msg(msg:String):
-	print("[RDC]%s" % msg)
+	if connected:
+		print("[RDC:%s]%s" % [client_id, msg])
+	else:
+		print("[RDC]%s" % msg)
 
 func print_err(msg:String):
-	printerr("[RDC]%s" % msg)
+	if connected:
+		printerr("[RDC:%s]%s" % [client_id, msg])
+	else:
+		printerr("[RDC]%s" % msg)
 
 
 func encode_var(v):
@@ -149,6 +163,28 @@ func decode_var(encoded_v:Array):
 	var encoded_bs:PoolByteArray = encoded_v[1]
 	var bs = encoded_bs.decompress(origin_size)
 	return bytes2var(bs, true)
+
+func _gen_tree_info_node(n, is_sm:bool=false, is_root:bool=false):
+	return {
+		"name": n,
+		"children": [],
+		"sm": is_sm,
+		"root": is_root
+	}
+func _gen_tree_info(node:Node):
+	var tree_node = _gen_tree_info_node(node.name, node is StateMachine)
+	for c in node.get_children():
+		tree_node.children.append(_gen_tree_info(c))
+	return tree_node
+	
+func gen_tree_info():
+	var root = get_tree().root
+	var root_node = _gen_tree_info_node('root', false, true)
+	
+	for c in root.get_children():
+		root_node.children.append(_gen_tree_info(c))
+	
+	return root_node
 #------ Singals -------
 func _send_some():
 	var rand = ["Hi", "OK", "Fine"]

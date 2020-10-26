@@ -1,5 +1,7 @@
 extends Node
 
+signal res_get_tree_info(tree_info, client_id)
+
 var server_addr:String = "127.0.0.1"
 var server_port:int = 25561
 
@@ -78,6 +80,9 @@ func request_set_client_id(client_peer):
 	var req = gen_request('set_client_id')
 	req.data.client_id = gen_client_id(client_peer)
 	send_var_packet(req, client_peer)
+func request_get_tree_info(client_peer):
+	var req = gen_request('get_tree_info')
+	send_var_packet(req, client_peer)
 #----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_" # request handler
@@ -88,8 +93,12 @@ func gen_handler_func(packet):
 		return h_res + packet.name
 	printerr("Unkown packet type.")
 	return ""
+#req
+#res
 func h_res_set_client_id(res, client_peer):
 	print_msg("Set client id of %s ok" % gen_client_id(client_peer))
+func h_res_get_tree_info(res, client_peer):
+	emit_signal("res_get_tree_info", res.data.tree_info, gen_client_id(client_peer))
 #----- Methods -----
 func start_listening():
 	print_msg("Server listen on %s:%d" % [server_addr, server_port])
@@ -103,7 +112,10 @@ func stop_listening():
 
 func send_var_packet(var_packet, client_peer:PacketPeerStream):
 	var_packet = encode_var(var_packet)
-	client_peer.put_var(var_packet)
+	if client_peer:
+		client_peer.put_var(var_packet)
+	else:
+		print_err("This client peer not available")
 
 func send_var_packet_to_all(var_packet):
 	var_packet = encode_var(var_packet)

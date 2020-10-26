@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
+[ext_resource path="res://addons/raiix_statemachine/StateMachineRemoteViewer/client_tab/scripts/ClientTab.gd" type="Script" id=1]
 [ext_resource path="res://addons/raiix_statemachine/StateMachineEditor/graph_edit/GraphEdit.tscn" type="PackedScene" id=2]
 
 [node name="ClientTab" type="HSplitContainer"]
@@ -11,6 +12,10 @@ margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 332.0
@@ -66,3 +71,4 @@ margin_top = 30.0
 margin_right = 672.0
 margin_bottom = 564.0
 size_flags_stretch_ratio = 2.0
+[connection signal="item_double_clicked" from="VBoxContainer/Tree" to="." method="_on_Tree_item_double_clicked"]

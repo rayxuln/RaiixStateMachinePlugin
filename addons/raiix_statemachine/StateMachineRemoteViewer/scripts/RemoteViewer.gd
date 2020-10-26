@@ -45,6 +45,13 @@ func update_client_tabs():
 		tab_container.remove_child(c)
 		c.queue_free()
 
+func get_current_client_id():
+	return get_current_tab().name
+
+func get_current_tab():
+	return tab_container.get_child(tab_container.current_tab)
+func update_tree(tab, tree_root_info):
+	tab.update_tree(tree_root_info)
 #----- Singals -----
 func _on_RemoteViewer_about_to_show():
 	update_client_tabs()
@@ -58,3 +65,11 @@ func _on_RemoteViewer_popup_hide():
 
 func _on_GetClientIDTimer_timeout():
 	update_client_tabs()
+	if tab_container.get_child_count() <= 0:
+		return
+	var client_id = get_current_client_id()
+	self.server.request_get_tree_info(self.server.get_client_peer(client_id))
+	var tree_info = yield(self.server, "res_get_tree_info")[0]
+	
+	update_tree(get_current_tab(), tree_info)
+
