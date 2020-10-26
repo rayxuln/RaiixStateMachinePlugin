@@ -1,6 +1,7 @@
 extends Node
 
 signal res_get_tree_info(tree_info, client_id)
+signal res_get_smr(smr, client_id)
 
 var server_addr:String = "127.0.0.1"
 var server_port:int = 25561
@@ -83,6 +84,11 @@ func request_set_client_id(client_peer):
 func request_get_tree_info(client_peer):
 	var req = gen_request('get_tree_info')
 	send_var_packet(req, client_peer)
+# the sm_path is relative to root viewport
+func request_get_smr(sm_path, client_peer):
+	var req = gen_request('get_smr')
+	req.data.sm_path = sm_path
+	send_var_packet(req, client_peer)
 #----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_" # request handler
@@ -99,6 +105,12 @@ func h_res_set_client_id(res, client_peer):
 	print_msg("Set client id of %s ok" % gen_client_id(client_peer))
 func h_res_get_tree_info(res, client_peer):
 	emit_signal("res_get_tree_info", res.data.tree_info, gen_client_id(client_peer))
+func h_res_get_smr(res, client_peer):
+	if res.code == 0:
+		emit_signal("res_get_smr", res.data.smr, gen_client_id(client_peer))
+	else:
+		print_err("get_smr fail, %s!" % res.msg)
+		emit_signal("res_get_smr", null, gen_client_id(client_peer))
 #----- Methods -----
 func start_listening():
 	print_msg("Server listen on %s:%d" % [server_addr, server_port])

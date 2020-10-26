@@ -87,6 +87,17 @@ func h_req_get_tree_info(req):
 	res.data.tree_info = gen_tree_info()
 	
 	send_var_packet(res)
+func h_req_get_smr(req):
+	var res = gen_respond(req.id, req.name)
+	
+	var smr = get_smr(req.data.sm_path)
+	if not smr:
+		res.code = -1
+		res.msg = "Can't not get smr of " + req.data.sm_path
+	else:
+		res.data.smr = smr
+	
+	send_var_packet(res)
 #res
 #------ Methods ------
 func start_connecting():
@@ -172,7 +183,7 @@ func _gen_tree_info_node(n, is_sm:bool=false, is_root:bool=false):
 		"root": is_root
 	}
 func _gen_tree_info(node:Node):
-	var tree_node = _gen_tree_info_node(node.name, node is StateMachine)
+	var tree_node = _gen_tree_info_node(node.name, node is StateMachine and node.state_machine_resource)
 	for c in node.get_children():
 		tree_node.children.append(_gen_tree_info(c))
 	return tree_node
@@ -185,6 +196,14 @@ func gen_tree_info():
 		root_node.children.append(_gen_tree_info(c))
 	
 	return root_node
+
+func get_smr(sm_path):
+	var sm = get_tree().root.get_node(sm_path)
+	if not sm:
+		return null
+	
+	return sm.state_machine_resource
+	
 #------ Singals -------
 func _send_some():
 	var rand = ["Hi", "OK", "Fine"]

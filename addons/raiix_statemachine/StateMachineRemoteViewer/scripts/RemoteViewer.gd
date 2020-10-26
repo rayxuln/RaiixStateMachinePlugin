@@ -1,6 +1,8 @@
 tool
 extends WindowDialog
 
+var title = "State Machine Remote Viewer"
+
 var ClientTab = preload("../client_tab/ClientTab.tscn")
 
 var editor_plugin:EditorPlugin 
@@ -33,6 +35,7 @@ func update_client_tabs():
 		if not has_client_tab(c_id):
 			var client_tab = ClientTab.instance()
 			tab_container.add_child(client_tab)
+			client_tab.connect("node_double_clicked", self, "_on_node_double_clicked", [client_tab])
 			client_tab.name = c_id
 	
 	# remove that doesn't in cs
@@ -73,3 +76,15 @@ func _on_GetClientIDTimer_timeout():
 	
 	update_tree(get_current_tab(), tree_info)
 
+func _on_node_double_clicked(node_path, is_sm, is_root, tab):
+	if is_sm:
+		var client_id = get_current_client_id()
+		self.server.request_get_smr(node_path, self.server.get_client_peer(client_id))
+		var smr = yield(self.server, "res_get_smr")[0]
+		if smr:
+			window_title = title + ' - ' + node_path
+			tab.state_machine_resource = smr
+	else:
+		window_title = title
+		tab.state_machine_resource = null
+	

@@ -5,10 +5,10 @@
 [node name="RemoteViewer" type="WindowDialog"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 79.0
-margin_top = 63.0
-margin_right = -82.0
-margin_bottom = -72.0
+margin_left = 172.024
+margin_top = 115.522
+margin_right = -183.976
+margin_bottom = -94.4776
 window_title = "State Machine Remote Viewer"
 resizable = true
 script = ExtResource( 1 )
@@ -37,10 +37,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Label" type="Label" parent="CenterContainer"]
-margin_left = 352.0
-margin_top = 225.0
-margin_right = 511.0
-margin_bottom = 239.0
+margin_left = 254.0
+margin_top = 188.0
+margin_right = 413.0
+margin_bottom = 202.0
 text = "No Client Connected yet."
 
 [node name="UpdateTimer" type="Timer" parent="."]

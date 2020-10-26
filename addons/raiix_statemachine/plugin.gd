@@ -87,11 +87,10 @@ func _on_selecton_changed():
 	var selection = get_editor_interface().get_selection().get_selected_nodes()
 	if selection.size() == 1:
 		var n = selection[0] as Node
-		for p in n.get_property_list():
-			if p.name == "state_machine_resource":
-				add_state_machine_resource_edtor()
-				state_machine_resource_editor.select_state_machine_node(n)
-				return
+		if n is StateMachine:
+			add_state_machine_resource_edtor()
+			state_machine_resource_editor.select_state_machine_node(n)
+			return
 	remove_state_machine_resource_editor()
 
 func _on_inspector_property_edited(p):
@@ -100,10 +99,9 @@ func _on_inspector_property_edited(p):
 			var selection = get_editor_interface().get_selection().get_selected_nodes()
 			if selection.size() == 1:
 				var n = selection[0] as Node
-				for p in n.get_property_list():
-					if p.name == "state_machine_resource":
-						state_machine_resource_editor.select_state_machine_node(n)
-						return
+				if n is StateMachine:
+					state_machine_resource_editor.select_state_machine_node(n)
+					return
 
 func _on_open_remote_viewer(ud):
 	if not remote_viewer:

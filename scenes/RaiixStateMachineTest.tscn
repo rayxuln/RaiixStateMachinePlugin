@@ -8,7 +8,7 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
 zoom = 0.999994
-scroll_offset = Vector2( -263.841, -183.85 )
+scroll_offset = Vector2( -447.842, -153.85 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
