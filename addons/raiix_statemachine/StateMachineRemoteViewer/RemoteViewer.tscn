@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/raiix_statemachine/StateMachineRemoteViewer/scripts/RemoteViewer.gd" type="Script" id=1]
+[ext_resource path="res://addons/raiix_statemachine/StateMachineEditor/graph_edit/GraphEdit.tscn" type="PackedScene" id=2]
+
+[node name="RemoteViewer" type="WindowDialog"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 79.0
+margin_top = 63.0
+margin_right = -82.0
+margin_bottom = -72.0
+window_title = "State Machine Remote Viewer"
+resizable = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TabContainer" type="TabContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 12.0
+margin_top = 11.0
+margin_right = -12.0
+margin_bottom = -14.0
+focus_mode = 1
+tab_align = 0
+drag_to_rearrange_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Client1" type="HSplitContainer" parent="TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Client1"]
+margin_right = 271.0
+margin_bottom = 404.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Client1/VBoxContainer"]
+margin_right = 271.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Tree" type="Tree" parent="TabContainer/Client1/VBoxContainer"]
+margin_top = 28.0
+margin_right = 271.0
+margin_bottom = 404.0
+size_flags_vertical = 3
+
+[node name="GraphEdit" parent="TabContainer/Client1" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 283.0
+margin_right = 831.0
+margin_bottom = 404.0
+size_flags_stretch_ratio = 2.0

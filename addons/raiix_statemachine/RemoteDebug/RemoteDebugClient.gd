@@ -65,7 +65,16 @@ func gen_respond(id, n):
 		'msg': 'ok',
 		'data': {}
 	}
-func respond_set_client_id(req):
+func gen_handler_func(packet):
+	var h_req = "h_req_"
+	var h_res = "h_res_"
+	if packet.type == VAR_PACKET_TYPE.REQUEST:
+		return h_req + packet.name
+	if packet.type == VAR_PACKET_TYPE.RESPOND:
+		return h_res + packet.name
+	printerr("Unkown packet type.")
+	return ""
+func h_req_set_client_id(req):
 	client_id = req.data.client_id
 	print_msg("Get id: %s" % client_id)
 	
@@ -111,12 +120,11 @@ func send_var_packet(var_packet):
 
 func handle_var_packet(var_packet):
 	var_packet = decode_var(var_packet)
-	var ms = get_method_list()
-	var respond_func = "respond_" + var_packet.name
-	for m in ms:
-		if m.name == respond_func:
-			call(respond_func, var_packet)
-			break
+	
+	
+	var handler_func = gen_handler_func(var_packet)
+	if self.has_method(handler_func):
+		call(handler_func, var_packet)
 
 func release():
 	packet_peer = null

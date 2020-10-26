@@ -10,6 +10,7 @@ var node_data_inspector:Control = null
 var arrow_data_inspector:Control = null
 
 var remote_debug_server:Node = null
+var remote_viewer:Popup = null
 
 func _enter_tree():
 	get_editor_interface().get_selection().connect("selection_changed", self, "_on_selecton_changed")
@@ -29,7 +30,7 @@ func _enter_tree():
 	var temp = preload("./RemoteDebug/RemoteDebugClient.gd") as Script
 	add_autoload_singleton("RemoteDebugClient", temp.resource_path)
 	
-	
+	add_tool_menu_item("State Machine Remote Viewer", self, "_on_open_remote_viewer")
 
 func _ready():
 	remote_debug_server = preload("./RemoteDebug/RemoteDebugServer.gd").new()
@@ -47,7 +48,13 @@ func _exit_tree():
 	
 	remove_state_machine_resource_editor()
 	
+	remove_tool_menu_item("State Machine Remote Viewer")
+	if remote_viewer:
+		remote_viewer.queue_free()
+		remote_viewer = null
+	
 	remove_autoload_singleton("RemoteDebugClient")
+	
 
 #----- Methods ------
 func add_state_machine_resource_edtor():
@@ -94,3 +101,14 @@ func _on_inspector_property_edited(p):
 					if p.name == "state_machine_resource":
 						state_machine_resource_editor.select_state_machine_node(n)
 						return
+
+func _on_open_remote_viewer(ud):
+	if not remote_viewer:
+		remote_viewer = preload("./StateMachineRemoteViewer/RemoteViewer.tscn").instance()
+		get_editor_interface().get_base_control().add_child(remote_viewer)
+		remote_viewer.connect("popup_hide", self, "_on_remote_viewer_hide")
+	remote_viewer.popup_centered()
+
+func _on_remote_viewer_hide():
+	pass
+
