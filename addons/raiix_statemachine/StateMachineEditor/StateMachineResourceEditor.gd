@@ -263,7 +263,8 @@ func _on_GraphEdit_node_reight_button_pressed(node):
 # open state script
 func _on_GraphEdit_node_double_pressed(node):
 	if node.data.script:
-		editor_plugin.get_editor_interface().select_file(node.data.script)
+		editor_plugin.get_editor_interface().edit_resource(load(node.data.script))
+		pass
 
 
 func _on_node_data_inspector_changed(key, value, node):

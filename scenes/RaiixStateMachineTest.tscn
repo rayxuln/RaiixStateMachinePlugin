@@ -51,7 +51,7 @@ data = {
 }, {
 "init": false,
 "name": "back",
-"offset": Vector2( 306.597, 262.868 ),
+"offset": Vector2( 306.597, 264.868 ),
 "script": null,
 "sub_state_machine": null
 } ],

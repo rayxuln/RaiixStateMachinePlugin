@@ -21,16 +21,19 @@ func _enter_tree():
 	
 	node_data_inspector = preload("./StateMachineResourceNodeDataInspector/NodeDataInspector.tscn").instance()
 	node_data_inspector.editor_plugin = self
+	node_data_inspector.name = "State"
 	node_data_inspector.notification(NOTIFICATION_READY)
 	
 	arrow_data_inspector = preload("./StateMachineResourceArrowDataInspector/ArrowDataInspector.tscn").instance()
 	arrow_data_inspector.editor_plugin = self
+	arrow_data_inspector.name = "Transition"
 	arrow_data_inspector.notification(NOTIFICATION_READY)
 	
 	var temp = preload("./RemoteDebug/RemoteDebugClient.gd") as Script
 	add_autoload_singleton("RemoteDebugClient", temp.resource_path)
 	
 	add_tool_menu_item("State Machine Remote Viewer", self, "_on_open_remote_viewer")
+	
 
 func _ready():
 	remote_debug_server = preload("./RemoteDebug/RemoteDebugServer.gd").new()
