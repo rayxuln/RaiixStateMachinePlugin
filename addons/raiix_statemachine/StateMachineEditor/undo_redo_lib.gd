@@ -21,7 +21,7 @@ func ur_create_state_machine_resource():
 	the_ur.commit_action()
 func _ur_create_state_machine_resource_do():
 	the_editor.state_machine.state_machine_resource = StateMachineResource.new()
-	the_editor.state_machine.connect("state_machine_data_property_changed", the_editor.state_machine.state_machine_resource, "_on_state_machine_data_property_changed")
+#	the_editor.state_machine.connect("state_machine_data_property_changed", the_editor.state_machine.state_machine_resource, "_on_state_machine_data_property_changed")
 	the_editor.refresh_inspector()
 func _ur_create_state_machine_resource_undo():
 	the_editor.state_machine.state_machine_resource = null

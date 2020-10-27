@@ -12,6 +12,8 @@ var packet_peer:PacketPeerStream = null
 
 var client_id:String
 
+var current_listening_sm:StateMachine = null
+
 enum VAR_PACKET_TYPE {
 	REQUEST,
 	RESPOND
@@ -64,6 +66,16 @@ func gen_respond(id, n):
 		'msg': 'ok',
 		'data': {}
 	}
+
+func request_sm_state_changed(old_state:String, new_state:String, by_transition:bool, sm_path:String):
+	var req = gen_request('sm_state_changed')
+	req.data.old_state = old_state
+	req.data.new_state = new_state
+	req.data.by_transition = by_transition
+	req.data.sm_path = sm_path
+	
+	send_var_packet(req)
+
 #----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_"
@@ -110,10 +122,22 @@ func h_req_get_sm_state(req):
 	
 	send_var_packet(res)
 func h_req_change_state(req):
-	var res = gen_respond(req.id, req.name)
+#	var res = gen_respond(req.id, req.name)
 	
 	change_sm_state(req.data.sm_path, req.data.state)
-	
+func h_req_listen_sm(req):
+#	var res = gen
+	var sm = null
+	if req.data.sm_path:
+		sm = get_sm(req.data.sm_path)
+	if sm != current_listening_sm:
+		if current_listening_sm:
+			if current_listening_sm.is_connected("state_changed", self, "_on_sm_state_changed"):
+				current_listening_sm.disconnect("state_changed", self, "_on_sm_state_changed")
+		current_listening_sm = sm
+		if current_listening_sm:
+			if not current_listening_sm.is_connected("state_changed", self, "_on_sm_state_changed"):
+				current_listening_sm.connect("state_changed", self, "_on_sm_state_changed", [current_listening_sm])
 #res
 #------ Methods ------
 func start_connecting():
@@ -214,7 +238,7 @@ func gen_tree_info():
 	return root_node
 
 func get_sm(sm_path):
-	return get_tree().root.get_node(sm_path)
+	return get_tree().root.get_node_or_null(sm_path)
 
 func get_smr(sm_path):
 	var sm = get_sm(sm_path)
@@ -236,5 +260,6 @@ func _send_some():
 	get_tree().create_timer(1).connect("timeout", self, "_send_some")
 	
 
-
+func _on_sm_state_changed(old_state, new_state, by_transition, sm):
+	request_sm_state_changed(old_state, new_state, by_transition, sm.get_path())
 

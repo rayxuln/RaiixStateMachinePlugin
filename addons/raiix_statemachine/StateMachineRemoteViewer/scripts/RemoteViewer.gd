@@ -13,7 +13,6 @@ func _on_get_server():
 onready var tab_container = $TabContainer
 onready var center_container = $CenterContainer
 onready var get_client_id_timer = $UpdateTimer
-onready var get_sm_state_timer = $GetSMStateTimer
 #----- Methods -----
 func has_client_tab(id):
 	for c in tab_container.get_children():
@@ -38,6 +37,8 @@ func update_client_tabs():
 			tab_container.add_child(client_tab)
 			client_tab.connect("node_double_clicked", self, "_on_node_double_clicked", [client_tab])
 			client_tab.connect("graph_node_left_button_pressed", self, "_on_graph_node_left_button_pressed", [client_tab])
+			client_tab.connect("smr_path_changed", self, "_on_smr_path_changed", [client_tab])
+			client_tab.connect("tree_some_node_removed", self, "_on_tree_some_node_removed", [client_tab])
 			client_tab.name = c_id
 	
 	# remove that doesn't in cs
@@ -61,20 +62,38 @@ func update_tree(tab, tree_root_info):
 func get_current_state_machine_path():
 	var tab = get_current_tab()
 	return tab.get_current_state_machine_path()
-	
+
+func fetch_state_machine_current_state():
+	var client_id = get_current_client_id()
+	var tab = get_current_tab()
+	self.server.request_get_sm_state(tab.get_current_state_machine_path(), self.server.get_client_peer(client_id))
+	var state = yield(self.server, "res_get_sm_state")[0]
+	if not tab:
+		return
+	if state:
+#		print("Current state: " + state)
+		tab.update_state(state)
+	else:
+		window_title = title
+		tab.state_machine_resource = null
+		tab.state_machine_node_path = ""
 #----- Singals -----
 func _on_RemoteViewer_about_to_show():
+	if not self.server.is_connected("req_sm_state_changed", self, "_on_remote_sm_state_changed"):
+		self.server.connect("req_sm_state_changed", self, "_on_remote_sm_state_changed")
 	update_client_tabs()
 	get_client_id_timer.start()
 	if get_current_tab():
 		if get_current_tab().state_machine_resource:
-			get_sm_state_timer.start()
+#			get_sm_state_timer.start()
+			fetch_state_machine_current_state()
+			self.server.request_listen_sm(get_current_state_machine_path(), self.server.get_client_peer(get_current_client_id()))
 
 
 func _on_RemoteViewer_popup_hide():
 	get_client_id_timer.stop()
-	get_sm_state_timer.stop()
-
+	if get_current_tab():
+		self.server.request_listen_sm(null, self.server.get_client_peer(get_current_client_id()))
 
 func _on_GetClientIDTimer_timeout():
 	update_client_tabs()
@@ -95,14 +114,15 @@ func _on_node_double_clicked(node_path, is_sm, is_root, tab):
 			window_title = title + ' - ' + node_path
 			tab.state_machine_resource = smr
 			tab.state_machine_node_path = node_path
-			get_sm_state_timer.start()
+			fetch_state_machine_current_state()
+			self.server.request_listen_sm(node_path, self.server.get_client_peer(client_id))
 		else:
-			get_sm_state_timer.stop()
+			self.server.request_listen_sm(null, self.server.get_client_peer(client_id))
 	else:
 		window_title = title
 		tab.state_machine_resource = null
 		tab.state_machine_node_path = ""
-		get_sm_state_timer.stop()
+		self.server.request_listen_sm(null, self.server.get_client_peer(get_current_client_id()))
 	
 func _on_graph_node_left_button_pressed(node, tab):
 	var client_id = get_current_client_id()
@@ -112,18 +132,24 @@ func _on_graph_node_left_button_pressed(node, tab):
 		self.server.request_change_state(tab.get_current_state_machine_path(), "null", self.server.get_client_peer(client_id))
 		
 
-func _on_GetSMStateTimer_timeout():
-	var client_id = get_current_client_id()
-	var tab = get_current_tab()
-	self.server.request_get_sm_state(tab.get_current_state_machine_path(), self.server.get_client_peer(client_id))
-	var state = yield(self.server, "res_get_sm_state")[0]
-	if not tab:
-		return
-	if state:
-#		print("Current state: " + state)
-		tab.update_state(state)
-	else:
-		get_sm_state_timer.stop()
-		window_title = title
-		tab.state_machine_resource = null
-		tab.state_machine_node_path = ""
+
+func _on_smr_path_changed(old_sm_path, new_sm_path, tab):
+	fetch_state_machine_current_state()
+	self.server.request_listen_sm(new_sm_path, self.server.get_client_peer(tab.name))
+
+
+func _on_remote_sm_state_changed(old_state, new_state, by_transition, sm_path, client_id):
+	sm_path = sm_path.split('/root/')[1]
+#	print("[%s]%s state change from %s to %s (t:%s)" % [client_id, sm_path, old_state, new_state, str(by_transition)])
+	if get_current_client_id() == client_id:
+		if get_current_state_machine_path() == sm_path:
+			get_current_tab().update_state(new_state)
+	
+
+func _on_tree_some_node_removed(tab):
+	if tab == get_current_tab():
+		fetch_state_machine_current_state()
+
+
+
+

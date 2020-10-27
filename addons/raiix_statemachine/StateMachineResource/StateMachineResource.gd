@@ -112,6 +112,7 @@ func _generate_states_from_state_machine_data(state_machine:StateMachine, sm_dat
 		if state.sub_state_machine != null:
 			var sub_state_machine_node = _generate_state_machine_from_state_machine_date(sm_data)
 			state_node.add_child(sub_state_machine_node)
+			sub_state_machine_node.sub_state_machine = true
 			
 			_generate_states_from_state_machine_data(sub_state_machine_node, state.sub_state_machine)
 	
@@ -128,8 +129,8 @@ func generate_states(state_machine:StateMachine):
 	_generate_states_from_state_machine_data(state_machine, data)
 
 #----- Signals ------
-func _on_state_machine_data_property_changed(sm):
-	data.init_state = sm.init_state_path
-	data.max_state_stack_size = sm.max_state_stack_size
+#func _on_state_machine_data_property_changed(sm):
+#	data.init_state = sm.init_state_path
+#	data.max_state_stack_size = sm.max_state_stack_size
 	
 

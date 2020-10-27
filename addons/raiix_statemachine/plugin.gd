@@ -34,8 +34,8 @@ func _enter_tree():
 	
 	
 	remote_viewer = preload("./StateMachineRemoteViewer/RemoteViewer.tscn").instance()
-	get_editor_interface().get_base_control().add_child(remote_viewer)
 	remote_viewer.editor_plugin = self
+	get_editor_interface().get_base_control().add_child(remote_viewer)
 	add_tool_menu_item("State Machine Remote Viewer", self, "_on_open_remote_viewer")
 	
 
@@ -46,10 +46,10 @@ func _ready():
 
 # BUG!!!
 # First open the editor, enable this plugin.
-# Than run any scene for once, stop it and disable this plugin
+# Than save any scene for once, disable this plugin
 # And you will see a Nil object function call error
 # Just ignore it, then re-enable this plugin,
-# then very thing just goes normally.
+# then every thing just goes normally.
 func _exit_tree():
 	remove_tool_menu_item("State Machine Remote Viewer")
 	remove_autoload_singleton("RemoteDebugClient")

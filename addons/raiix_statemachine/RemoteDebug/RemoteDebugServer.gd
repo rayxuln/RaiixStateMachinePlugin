@@ -4,6 +4,8 @@ signal res_get_tree_info(tree_info, client_id)
 signal res_get_smr(smr, client_id)
 signal res_get_sm_state(state, client_id)
 
+signal req_sm_state_changed(old_state, new_state, by_transition, sm_path, client_id)
+
 var server_addr:String = "127.0.0.1"
 var server_port:int = 25561
 
@@ -99,6 +101,10 @@ func request_change_state(sm_path:String, state:String, client_peer):
 	req.data.sm_path = sm_path
 	req.data.state = state
 	send_var_packet(req, client_peer)
+func request_listen_sm(sm_path, client_peer):
+	var req = gen_request('listen_sm')
+	req.data.sm_path = sm_path
+	send_var_packet(req, client_peer)
 #----- Handler -----
 func gen_handler_func(packet):
 	var h_req = "h_req_" # request handler
@@ -110,6 +116,8 @@ func gen_handler_func(packet):
 	printerr("Unkown packet type.")
 	return ""
 #req
+func h_req_sm_state_changed(req, client_peer):
+	emit_signal("req_sm_state_changed", req.data.old_state, req.data.new_state, req.data.by_transition, req.data.sm_path, gen_client_id(client_peer))
 #res
 func h_res_set_client_id(res, client_peer):
 	print_msg("Set client id of %s ok" % gen_client_id(client_peer))
@@ -126,7 +134,7 @@ func h_res_get_sm_state(res, client_peer):
 		emit_signal("res_get_sm_state", res.data.state, gen_client_id(client_peer))
 	else:
 		print_err("get_sm_state fail, %s!" % res.msg)
-		emit_signal("res_get_smr", null, gen_client_id(client_peer))
+		emit_signal("res_get_sm_state", null, gen_client_id(client_peer))
 #----- Methods -----
 func start_listening():
 	print_msg("Server listen on %s:%d" % [server_addr, server_port])

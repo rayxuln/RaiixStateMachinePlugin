@@ -4,6 +4,8 @@ extends HSplitContainer
 
 signal node_double_clicked(node_path, is_sm, is_root)
 signal graph_node_left_button_pressed(node)
+signal smr_path_changed(old_sm_path, new_sm_path)
+signal tree_some_node_removed
 
 var old_tree_info = null
 
@@ -64,6 +66,8 @@ func _update_tree(tree_item:TreeItem, new_tree_info_node):
 		i = i.get_next()
 	
 	# delete that did delete
+	if removed_tree_items.size() > 0:
+		emit_signal("tree_some_node_removed")
 	for r in removed_tree_items:
 		r.free()
 	
@@ -205,13 +209,18 @@ func _on_Tree_item_activated():
 	emit_signal("node_double_clicked", path, is_sm, false)
 
 func _on_path_button_pressed(button):
+	var old_sm_path = get_current_state_machine_path()
 	state_machine_resource.go_to(button.get_meta("path"))
-	
+	var new_sm_path = get_current_state_machine_path()
+	emit_signal("smr_path_changed", old_sm_path, new_sm_path)
 	_load_state_machine_resource_to_graph_edit(state_machine_resource)
 
 
 func _on_GraphEdit_node_reight_button_pressed(node):
+	var old_sm_path = get_current_state_machine_path()
 	state_machine_resource.go_to(node.name)
+	var new_sm_path = get_current_state_machine_path()
+	emit_signal("smr_path_changed", old_sm_path, new_sm_path)
 	
 	_load_state_machine_resource_to_graph_edit(state_machine_resource)
 

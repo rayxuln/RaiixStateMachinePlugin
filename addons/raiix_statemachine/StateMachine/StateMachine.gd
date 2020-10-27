@@ -2,7 +2,8 @@ extends Node
 
 class_name StateMachine
 
-signal state_machine_data_property_changed(sm)
+#signal state_machine_data_property_changed(sm)
+signal state_changed(old_state, new_state, by_tansition)
 
 export(NodePath) var agent_path:NodePath setget _on_set_agent_path, _on_get_agent_path
 func _on_set_agent_path(v):
@@ -18,7 +19,7 @@ var state_stack:Array = []
 export(int) var max_state_stack_size:int = 1 setget _on_set_max_state_stack_size
 func _on_set_max_state_stack_size(v):
 	max_state_stack_size = v
-	emit_signal("state_machine_data_property_changed", self)
+#	emit_signal("state_machine_data_property_changed", self)
 var state_stack_head = 0
 var state_stack_tail = 0
 
@@ -30,7 +31,7 @@ export(NodePath) var init_state_path:NodePath setget _on_set_init_state_path, _o
 func _on_set_init_state_path(v):
 	init_state_path = v
 	init_state = get_node_or_null(init_state_path)
-	emit_signal("state_machine_data_property_changed", self)
+#	emit_signal("state_machine_data_property_changed", self)
 func _on_get_init_state_path():
 	return init_state_path
 var init_state:Node = null
@@ -39,6 +40,7 @@ var current_state:State
 
 export(bool) var enable:bool = false
 export(bool) var auto_start:bool = true
+export(bool) var sub_state_machine:bool = false
 
 export(Resource) var state_machine_resource:Resource = null
 
@@ -53,6 +55,12 @@ func _ready():
 func _process(delta):
 	if not enable:
 		return
+	if sub_state_machine:
+		return
+	_tick(delta)
+
+#------ Methods -----
+func _tick(delta):
 	if current_state:
 		current_state._tick(agent, self, delta)
 		
@@ -63,13 +71,12 @@ func _process(delta):
 				for t in ts:
 					if t.cond:
 						if SMTCS.eval(t.cond, current_state):
-							if change_state(t.to_state):
+							if change_state(t.to_state, true):
 								break
 					else:
-						if change_state(t.to_state):
+						if change_state(t.to_state, true):
 							break
 
-#------ Methods -----
 func start():
 	agent = get_node_or_null(agent_path)
 	init_state = get_node_or_null(init_state_path)
@@ -132,7 +139,7 @@ func state_stack_pop():
 func state_stack_empty():
 	return state_stack_head == state_stack_tail and state_stack[state_stack_head] == null
 
-func change_state(new_state):
+func change_state(new_state, by_transition:bool=false):
 	if not enable:
 		printerr("The state machine is not enable, can't change the state")
 		return
@@ -143,7 +150,9 @@ func change_state(new_state):
 				return false
 			if current_state:
 				current_state._exit()
+			var old_state = current_state
 			current_state = state_stack_pop()
+			emit_signal("state_changed", old_state.name if old_state else 'null', current_state.name if current_state else 'null', by_transition)
 			if current_state:
 				current_state._enter()
 			return
@@ -157,7 +166,9 @@ func change_state(new_state):
 	if current_state:
 		current_state._exit()
 		state_stack_push(current_state)
+	var old_state = current_state
 	current_state = new_state
+	emit_signal("state_changed", old_state.name if old_state else 'null', current_state.name if current_state else 'null', by_transition)
 	if current_state:
 		current_state._enter()
 	return true

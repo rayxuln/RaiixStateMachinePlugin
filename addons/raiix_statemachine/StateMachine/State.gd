@@ -28,6 +28,8 @@ func _enter():
 
 func _tick(agent, state_machine, delta):
 	tick(agent, state_machine, delta)
+	if get_child_count() > 0:
+		get_child(0)._tick(delta)
 
 func _exit():
 	if get_child_count() > 0:

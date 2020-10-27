@@ -8,18 +8,18 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
 zoom = 0.999994
-scroll_offset = Vector2( -439.842, -161.85 )
+scroll_offset = Vector2( -387.842, -305.851 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
 "states": [ {
-"init": true,
+"init": false,
 "name": "idle",
 "offset": Vector2( -119.67, -97.334 ),
 "script": "res://scenes/states/idle.gd",
 "sub_state_machine": null
 }, {
-"init": false,
+"init": true,
 "name": "run",
 "offset": Vector2( 683.468, -117.987 ),
 "script": "res://scenes/states/run.gd",
@@ -133,7 +133,6 @@ texture = ExtResource( 3 )
 script = ExtResource( 1 )
 agent_path = NodePath("..")
 max_state_stack_size = 5
-init_state_path = NodePath("idle")
 state_machine_resource = SubResource( 1 )
 
 [node name="AnimationTree" type="AnimationTree" parent="Player"]
