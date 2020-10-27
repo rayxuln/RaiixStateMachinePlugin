@@ -59,6 +59,13 @@ func _process(delta):
 		return
 	_tick(delta)
 
+func _physics_process(delta):
+	if not enable:
+		return
+	if sub_state_machine:
+		return
+	_physics_tick(delta)
+
 #------ Methods -----
 func _tick(delta):
 	if current_state:
@@ -76,6 +83,10 @@ func _tick(delta):
 					else:
 						if change_state(t.to_state, t.to_state != 'back'):
 							break
+
+func _physics_tick(delta):
+	if current_state:
+		current_state._physics_tick(agent, self, delta)
 
 func start():
 	agent = get_node_or_null(agent_path)

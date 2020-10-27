@@ -21,26 +21,35 @@ func _ready():
 func _enter():
 	if get_child_count() > 0:
 		var sm = get_child(0)
-		sm.agent_path = self.agent.get_path_to(sm)
+		sm.agent = self.agent
 		sm.start()
 	
-	enter()
+	enter(self.agent, self.state_machine)
 
 func _tick(agent, state_machine, delta):
 	tick(agent, state_machine, delta)
 	if get_child_count() > 0:
-		get_child(0)._tick(delta)
+		var sm = get_child(0)
+		sm.agent = self.agent
+		sm._tick(delta)
+
+func _physics_tick(agent, state_machine, delta):
+	physics_tick(agent, state_machine, delta)
+	if get_child_count() > 0:
+		var sm = get_child(0)
+		sm.agent = self.agent
+		sm._physics_tick(delta)
 
 func _exit():
 	if get_child_count() > 0:
 		get_child(0).stop()
 	
-	exit()
+	exit(self.agent, self.state_machine)
 
 #----- Public Methods-----
 
 # override
-func enter():
+func enter(agent, state_machine):
 	pass
 
 # override
@@ -48,5 +57,9 @@ func tick(agent, state_machine, delta):
 	pass
 
 # override
-func exit():
+func physics_tick(agent, state_machine, delta):
+	pass
+
+# override
+func exit(agent, state_machine):
 	pass

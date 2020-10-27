@@ -7,80 +7,74 @@
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-zoom = 0.931424
-scroll_offset = Vector2( -352.348, -388.708 )
+zoom = 0.731431
+scroll_offset = Vector2( -1021.46, -394.873 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
 "states": [ {
-"init": false,
+"init": true,
 "name": "idle",
-"offset": Vector2( -141.67, -141.334 ),
+"offset": Vector2( -814.319, -51.1009 ),
 "script": "res://scenes/states/idle.gd",
 "sub_state_machine": null
 }, {
-"init": true,
+"init": false,
 "name": "run",
-"offset": Vector2( 771.971, -81.6531 ),
+"offset": Vector2( 259.108, -59.6862 ),
 "script": "res://scenes/states/run.gd",
-"sub_state_machine": {
-"max_state_stack_size": 1,
-"states": [ {
-"init": true,
-"name": "sub_idle",
-"offset": Vector2( -23.9774, -137.072 ),
-"script": "res://scenes/states/sub_states/idle.gd",
 "sub_state_machine": null
 }, {
 "init": false,
-"name": "sub_run",
-"offset": Vector2( 716.035, -137.072 ),
-"script": "res://scenes/states/sub_states/run.gd",
+"name": "jump",
+"offset": Vector2( -357.712, -280.237 ),
+"script": "res://scenes/states/jump.gd",
 "sub_state_machine": null
-} ],
-"transitions": [ {
-"cond": [  ],
-"from": "sub_idle",
-"to": "sub_run"
 }, {
-"cond": [  ],
-"from": "sub_run",
-"to": "sub_idle"
-} ]
-}
+"init": false,
+"name": "stagger",
+"offset": Vector2( -363.143, 140.609 ),
+"script": "res://scenes/states/stagger.gd",
+"sub_state_machine": null
 }, {
 "init": false,
 "name": "back",
-"offset": Vector2( 254.096, 257.368 ),
-"script": null,
-"sub_state_machine": null
-}, {
-"init": false,
-"name": "state",
-"offset": Vector2( 158.675, -466.31 ),
+"offset": Vector2( 927.389, -95.8687 ),
 "script": null,
 "sub_state_machine": null
 } ],
 "transitions": [ {
-"cond": [ "agent.is_change_action_pressed()" ],
+"cond": [ "agent.is_move_input()" ],
 "from": "idle",
 "to": "run"
 }, {
-"cond": [ "agent.is_back_action_preesed()" ],
+"cond": [ "!agent.is_move_input()" ],
 "from": "run",
-"to": "back"
+"to": "idle"
 }, {
-"cond": [ "agent.is_back_action_preesed()" ],
+"cond": [ "_Input.is_action_just_pressed(\"jump\")" ],
+"from": "run",
+"to": "jump"
+}, {
+"cond": [ "_Input.is_action_just_pressed(\"jump\")" ],
 "from": "idle",
-"to": "back"
-}, {
-"cond": [ "_Input.is_action_just_pressed(\"change\")" ],
-"from": "run",
-"to": "state"
+"to": "jump"
 }, {
 "cond": [  ],
-"from": "state",
-"to": "idle"
+"from": "jump",
+"to": "back"
+}, {
+"cond": [ "_Input.is_action_just_pressed(\"stagger\")" ],
+"from": "idle",
+"to": "stagger"
+}, {
+"cond": [ "_Input.is_action_just_pressed(\"stagger\")" ],
+"from": "run",
+"to": "stagger"
+}, {
+"cond": [ "!stagging" ],
+"from": "stagger",
+"to": "back"
 } ]
 }
 
@@ -116,7 +110,8 @@ graph_offset = Vector2( -31.5245, -28 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=9]
 
 [sub_resource type="Animation" id=10]
-loop = true
+resource_name = "stagger"
+length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:self_modulate")
 tracks/0/interp = 1
@@ -124,10 +119,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.815686, 0.0627451, 0.0627451, 1 ) ]
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.815686, 0.0627451, 0.0627451, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
 [node name="RaiixStateMachineTest" type="Node2D"]
@@ -135,6 +130,8 @@ tracks/0/keys = {
 [node name="Player" type="KinematicBody2D" parent="."]
 position = Vector2( 437.981, 286.865 )
 script = ExtResource( 4 )
+move_speed = 200.0
+jump_speed = -300.0
 
 [node name="Sprite" type="Sprite" parent="Player"]
 texture = ExtResource( 3 )
@@ -152,4 +149,17 @@ parameters/playback = SubResource( 8 )
 parameters/StateMachine/playback = SubResource( 9 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
-anims/idle = SubResource( 10 )
+anims/stagger = SubResource( 10 )
+
+[node name="Label" type="Label" parent="Player"]
+margin_left = -22.0917
+margin_top = -89.1027
+margin_right = 17.9083
+margin_bottom = -75.1027
+text = "State"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="state_changed" from="Player/MovmentStateMachine" to="Player" method="_on_MovmentStateMachine_state_changed"]
