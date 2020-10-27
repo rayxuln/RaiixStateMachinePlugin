@@ -84,8 +84,9 @@ func request_set_client_id(client_peer):
 	var req = gen_request('set_client_id')
 	req.data.client_id = gen_client_id(client_peer)
 	send_var_packet(req, client_peer)
-func request_get_tree_info(client_peer):
+func request_get_tree_info(filter, client_peer):
 	var req = gen_request('get_tree_info')
+	req.data.filter = filter
 	send_var_packet(req, client_peer)
 # the sm_path is relative to root viewport
 func request_get_smr(sm_path, client_peer):
@@ -133,7 +134,7 @@ func h_res_get_sm_state(res, client_peer):
 	if res.code == 0:
 		emit_signal("res_get_sm_state", res.data.state, gen_client_id(client_peer))
 	else:
-		print_err("get_sm_state fail, %s!" % res.msg)
+#		print_err("get_sm_state fail, %s!" % res.msg)
 		emit_signal("res_get_sm_state", null, gen_client_id(client_peer))
 #----- Methods -----
 func start_listening():

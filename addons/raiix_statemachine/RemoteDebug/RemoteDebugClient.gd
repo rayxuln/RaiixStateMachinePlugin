@@ -100,7 +100,7 @@ func h_req_set_client_id(req):
 func h_req_get_tree_info(req):
 	var res = gen_respond(req.id, req.name)
 	
-	res.data.tree_info = gen_tree_info()
+	res.data.tree_info = gen_tree_info(req.data.filter)
 	
 	send_var_packet(res)
 func h_req_get_smr(req):
@@ -226,18 +226,29 @@ func _gen_tree_info_node(n, is_sm:bool=false, is_root:bool=false):
 		"sm": is_sm,
 		"root": is_root
 	}
-func _gen_tree_info(node:Node):
+func _gen_tree_info(node:Node, filter:RegEx):
 	var tree_node = _gen_tree_info_node(node.name, node is StateMachine and node.state_machine_resource)
 	for c in node.get_children():
-		tree_node.children.append(_gen_tree_info(c))
+		var node_info = _gen_tree_info(c, filter)
+		var valid = filter == null or filter.search(node_info.name) != null or node_info.children.size() > 0
+		if valid:
+			tree_node.children.append(node_info)
 	return tree_node
 	
-func gen_tree_info():
+func gen_tree_info(filter:String):
 	var root = get_tree().root
 	var root_node = _gen_tree_info_node('root', false, true)
 	
+	var filter_reg = null
+	if not filter.empty():
+		filter_reg = RegEx.new()
+		filter_reg.compile(filter)
+	
 	for c in root.get_children():
-		root_node.children.append(_gen_tree_info(c))
+		var node_info = _gen_tree_info(c, filter_reg)
+		var valid = filter_reg == null or filter_reg.search(node_info.name) != null or node_info.children.size() > 0
+		if valid:
+			root_node.children.append(node_info)
 	
 	return root_node
 

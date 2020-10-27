@@ -6,6 +6,7 @@ signal node_double_clicked(node_path, is_sm, is_root)
 signal graph_node_left_button_pressed(node)
 signal smr_path_changed(old_sm_path, new_sm_path)
 signal tree_some_node_removed
+signal on_search_line_edit_text_changed(new_text)
 
 var old_tree_info = null
 
@@ -17,6 +18,7 @@ onready var tree = $VBoxContainer/Tree
 onready var graph_edit = $GraphEditContainer/GraphEdit
 onready var graph_edit_container = $GraphEditContainer
 onready var info_container = $InfoContainer
+onready var search_line_edit = $VBoxContainer/SearchLineEdit
 onready var path_button_container = $GraphEditContainer/HBoxContainer/PathButtonContainer
 
 var state_machine_resource:Resource = null setget _on_set_state_machine_resource
@@ -234,3 +236,7 @@ func _on_GraphEdit_node_reight_button_pressed(node):
 func _on_GraphEdit_node_left_button_pressed(node):
 #	change_node_left_button_state(node)
 	emit_signal("graph_node_left_button_pressed", node)
+
+
+func _on_SearchLineEdit_text_changed(new_text):
+	emit_signal("on_search_line_edit_text_changed", new_text)

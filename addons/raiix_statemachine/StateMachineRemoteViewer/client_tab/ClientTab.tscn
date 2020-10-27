@@ -23,7 +23,7 @@ margin_bottom = 564.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer"]
 margin_right = 248.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -84,6 +84,7 @@ margin_top = 275.0
 margin_right = 495.0
 margin_bottom = 289.0
 text = "Select a state machine node to view."
+[connection signal="text_changed" from="VBoxContainer/SearchLineEdit" to="." method="_on_SearchLineEdit_text_changed"]
 [connection signal="item_activated" from="VBoxContainer/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="node_left_button_pressed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_left_button_pressed"]
 [connection signal="node_reight_button_pressed" from="GraphEditContainer/GraphEdit" to="." method="_on_GraphEdit_node_reight_button_pressed"]

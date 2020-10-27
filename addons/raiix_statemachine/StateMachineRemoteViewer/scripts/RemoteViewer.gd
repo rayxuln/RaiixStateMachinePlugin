@@ -110,7 +110,7 @@ func _on_GetClientIDTimer_timeout():
 	var client_peer = self.server.get_client_peer(client_id)
 	if not client_peer:
 		return
-	self.server.request_get_tree_info(client_peer)
+	self.server.request_get_tree_info(get_current_tab().search_line_edit.text, client_peer)
 	var tree_info = yield(self.server, "res_get_tree_info")[0]
 	
 	update_tree(get_current_tab(), tree_info)
