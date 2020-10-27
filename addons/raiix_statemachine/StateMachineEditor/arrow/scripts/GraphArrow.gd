@@ -187,17 +187,23 @@ func check_if_use_offset(start_node, end_node):
 	return start_node in s_ns and end_node in e_ns
 
 func update_point_pos_with_nodes():
-	var s_p = calc_node_center(start_node)
-	var e_p = calc_node_center(end_node)
-	var offset = point_offset * calc_nor(calc_dir(s_p, e_p))
-	
-	if not check_if_use_offset(start_node, end_node):
-		offset = Vector2.ZERO
-	
-#	print("update: " + str(offset))
-	
-	self.start_position = s_p + offset
-	self.end_position = e_p + offset
+	if start_node and end_node:
+		var s_p = calc_node_center(start_node)
+		var e_p = calc_node_center(end_node)
+		var offset = point_offset * calc_nor(calc_dir(s_p, e_p))
+		
+		if not check_if_use_offset(start_node, end_node):
+			offset = Vector2.ZERO
+		
+		self.start_position = s_p + offset
+		self.end_position = e_p + offset
+	else:
+		if start_node:
+			var s_p = calc_node_center(start_node)
+			self.start_position = s_p
+		if end_node:
+			var e_p = calc_node_center(end_node)
+			self.start_position = e_p
 
 func update_from_data(graph_node):
 	updating_from_data = true

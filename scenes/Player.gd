@@ -8,6 +8,9 @@ func _ready():
 #	yield(get_tree().create_timer(20), "timeout")
 #	queue_free()
 
+#func _input(event):
+#	if event is InputEventMagnifyGesture:
+#		print(event.factor)
 	
 
 #---- Methods -----

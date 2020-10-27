@@ -242,7 +242,9 @@ func gen_tree_info(filter:String):
 	var filter_reg = null
 	if not filter.empty():
 		filter_reg = RegEx.new()
-		filter_reg.compile(filter)
+		var res = filter_reg.compile(filter)
+		if res != OK:
+			filter_reg = null
 	
 	for c in root.get_children():
 		var node_info = _gen_tree_info(c, filter_reg)

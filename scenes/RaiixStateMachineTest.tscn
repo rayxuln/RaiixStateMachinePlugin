@@ -7,15 +7,15 @@
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-zoom = 0.599993
-scroll_offset = Vector2( -987.758, -470.065 )
+zoom = 0.931424
+scroll_offset = Vector2( -352.348, -388.708 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
 "states": [ {
 "init": false,
 "name": "idle",
-"offset": Vector2( -119.67, -97.334 ),
+"offset": Vector2( -141.67, -141.334 ),
 "script": "res://scenes/states/idle.gd",
 "sub_state_machine": null
 }, {
@@ -109,7 +109,7 @@ states/idle/node = SubResource( 4 )
 states/idle/position = Vector2( 219.5, 67 )
 transitions = [ "idle", "89", SubResource( 5 ), "89", "idle", SubResource( 6 ) ]
 start_node = "idle"
-graph_offset = Vector2( 50, -28 )
+graph_offset = Vector2( -31.5245, -28 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=8]
 

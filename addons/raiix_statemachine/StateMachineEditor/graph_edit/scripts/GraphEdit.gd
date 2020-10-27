@@ -55,6 +55,8 @@ var arrow_placing_start_node:Control = null
 var arrow_placing_hovering_node:Control = null
 var arrow_placing_arrow:Control = null
 
+var pan_gesture_dragging_speed:float = 8
+
 func _input(event):
 	if event is InputEventMouseButton:
 		if not event.pressed:
@@ -73,7 +75,16 @@ func _input(event):
 			_update_nodes_position()
 		if dragging_nodes:
 			_move_selected_nodes_position(event.relative / zoom)
-		
+	
+	var r = Rect2(Vector2.ZERO, rect_size)
+	if r.has_point(get_local_mouse_position()):
+		if event is InputEventPanGesture:
+				self.scroll_offset += event.delta / zoom * pan_gesture_dragging_speed
+				_update_nodes_position()
+				_update_rows_position()
+		if event is InputEventMagnifyGesture:
+			zoom_pos = get_local_mouse_position()
+			self.target_zoom *= event.factor
 func _ready():
 	pass
 
@@ -162,6 +173,7 @@ func place_arrow(start_node:Control):
 	
 	var a = preload("../../arrow/GraphArrow.tscn").instance()
 	arrows.add_child(a)
+	a.start_node = start_node
 	a.start_position = start_node.offset + (start_node.rect_size)/2.0 - scroll_offset
 	a.edit_mode = true
 	a.condition_text = '"What do you want it to connect with?"'
@@ -271,6 +283,8 @@ func _gui_input(event):
 				self.target_zoom -= 0.1
 			elif event.pressed and event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
 				unselect_all()
+		
+		
 
 func _on_node_gui_input(event, node):
 	emit_signal("node_gui_input", event, node)

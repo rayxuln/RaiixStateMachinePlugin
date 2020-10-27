@@ -59,14 +59,6 @@ _global_script_class_icons={
 config/name="State Machine Transition Condition Syntax"
 config/icon="res://icon.png"
 
-[autoload]
-
-RemoteDebugClient="*res://addons/raiix_statemachine/RemoteDebug/RemoteDebugClient.gd"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "raiix_statemachine" )
-
 [input]
 
 change={
