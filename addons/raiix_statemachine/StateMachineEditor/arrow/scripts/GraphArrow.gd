@@ -39,18 +39,30 @@ func _on_set_focus(v):
 
 var edit_mode = false
 
+var updating_from_data = false
+
 var start_node:Control = null setget _on_set_start_node
 func _on_set_start_node(v):
+	var old = start_node
 	start_node = v
 	if start_node:
-		data["from"] = start_node.name
-		start_node.connect("item_rect_changed", self, "_on_start_node_rect_changed")
+		if not updating_from_data:
+			data["from"] = start_node.name
+		if old and old.is_connected("item_rect_changed", self, "_on_start_node_rect_changed"):
+			old.disconnect("item_rect_changed", self, "_on_start_node_rect_changed")
+		if not start_node.is_connected("item_rect_changed", self, "_on_start_node_rect_changed"):
+			start_node.connect("item_rect_changed", self, "_on_start_node_rect_changed")
 var end_node:Control = null setget _on_set_end_node
 func _on_set_end_node(v):
+	var old = end_node
 	end_node = v
 	if end_node:
-		data["to"] = end_node.name
-		end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
+		if not updating_from_data:
+			data["to"] = end_node.name
+		if old and old.is_connected("item_rect_changed", self, "_on_end_node_rect_changed"):
+			old.disconnect("item_rect_changed", self, "_on_end_node_rect_changed")
+		if not end_node.is_connected("item_rect_changed", self, "_on_end_node_rect_changed"):
+			end_node.connect("item_rect_changed", self, "_on_end_node_rect_changed")
 
 onready var condition_label = $ConditionLabel
 onready var condition_label_inversed = $ConditionLabelInversed
@@ -66,11 +78,32 @@ func _on_set_condition_text(v):
 
 var data:Dictionary = {}
 
+var active:bool = false
+var last_active:bool = false
+var save_active_line_color
+export(Color) var active_line_color = Color.aqua
+export(float) var active_gap_time = 0.3 #sec
+var active_time = 0
+
 func _process(delta):
 	if edit_mode:
 		var p = get_parent()
 		if p is Control:
 			self.end_position = p.get_local_mouse_position()
+	else:
+		if last_active != active:
+			if active:
+				save_active_line_color = line_color
+				line_color = active_line_color
+				active_time = OS.get_ticks_msec()
+				update()
+			else:
+				line_color = save_active_line_color
+				update()
+			last_active = active
+		if active:
+			if OS.get_ticks_msec() - active_time >= active_gap_time * 1000:
+				active = false
 
 func _draw():
 	_update_rect()
@@ -167,6 +200,7 @@ func update_point_pos_with_nodes():
 	self.end_position = e_p + offset
 
 func update_from_data(graph_node):
+	updating_from_data = true
 	var s = graph_node.nodes.get_node_or_null(data.from)
 	var e = graph_node.nodes.get_node_or_null(data.to)
 	if s == null:
@@ -174,14 +208,16 @@ func update_from_data(graph_node):
 	if e == null:
 		printerr("%s state node does not exists!" % data.to)
 	
-	start_node = s
-	end_node = e
+	self.start_node = s
+	self.end_node = e
+	
 	
 	update_point_pos_with_nodes()
 	
 	self.condition_text = data.cond[0] if data.cond.size() > 0 else ""
 	
 	update()
+	updating_from_data = false
 
 #------ Singals ------
 func _on_start_node_rect_changed():

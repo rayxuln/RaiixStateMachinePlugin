@@ -71,10 +71,10 @@ func _tick(delta):
 				for t in ts:
 					if t.cond:
 						if SMTCS.eval(t.cond, current_state):
-							if change_state(t.to_state, true):
+							if change_state(t.to_state, t.to_state != 'back'):
 								break
 					else:
-						if change_state(t.to_state, true):
+						if change_state(t.to_state, t.to_state != 'back'):
 							break
 
 func start():

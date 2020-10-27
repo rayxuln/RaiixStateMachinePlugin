@@ -105,6 +105,19 @@ func get_cond():
 		else:
 			res.append(c.text)
 	return res
+
+func set_back_title(from_state, to_state):
+	title.text = "From %s to %s" % [from_state, to_state]
+
+func set_back_from_option_button():
+	inspecting = true
+	from_option_button.select(last_from_option_index)
+	inspecting = false
+
+func set_back_to_option_button():
+	inspecting = true
+	to_option_button.select(last_to_option_index)
+	inspecting = false
 #----- Singals -----
 func _on_AddButton_pressed():
 	add_cond_edit("\"New Condition\"")

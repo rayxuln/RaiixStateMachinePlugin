@@ -2,10 +2,19 @@ extends KinematicBody2D
 
 
 func _ready():
+	
+	var i = $Tree.create_item(null)
+	i.set_text(0, "6666")
+	$Tree.create_item(null)
+	i = $Tree.create_item(null)
+	i.set_text(0, "7777")
+	
 	yield(get_tree().create_timer(5), "timeout")
 	get_parent().add_child($Sprite.duplicate())
-	yield(get_tree().create_timer(20), "timeout")
-	queue_free()
+#	yield(get_tree().create_timer(20), "timeout")
+#	queue_free()
+
+	
 
 #---- Methods -----
 func is_change_action_pressed():

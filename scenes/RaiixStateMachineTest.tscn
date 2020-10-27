@@ -7,8 +7,8 @@
 
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
-zoom = 0.999994
-scroll_offset = Vector2( -387.842, -305.851 )
+zoom = 0.599993
+scroll_offset = Vector2( -987.758, -470.065 )
 data = {
 "init_state": NodePath(""),
 "max_state_stack_size": 5,
@@ -21,7 +21,7 @@ data = {
 }, {
 "init": true,
 "name": "run",
-"offset": Vector2( 683.468, -117.987 ),
+"offset": Vector2( 771.971, -81.6531 ),
 "script": "res://scenes/states/run.gd",
 "sub_state_machine": {
 "max_state_stack_size": 1,
@@ -51,7 +51,13 @@ data = {
 }, {
 "init": false,
 "name": "back",
-"offset": Vector2( 306.597, 264.868 ),
+"offset": Vector2( 254.096, 257.368 ),
+"script": null,
+"sub_state_machine": null
+}, {
+"init": false,
+"name": "state",
+"offset": Vector2( 158.675, -466.31 ),
 "script": null,
 "sub_state_machine": null
 } ],
@@ -68,8 +74,12 @@ data = {
 "from": "idle",
 "to": "back"
 }, {
-"cond": [ "agent.is_change_action_pressed()" ],
+"cond": [ "_Input.is_action_just_pressed(\"change\")" ],
 "from": "run",
+"to": "state"
+}, {
+"cond": [  ],
+"from": "state",
 "to": "idle"
 } ]
 }

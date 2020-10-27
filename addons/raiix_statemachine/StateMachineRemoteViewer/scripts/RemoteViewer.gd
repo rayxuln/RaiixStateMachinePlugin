@@ -25,6 +25,12 @@ func update_client_tabs():
 	if cs.size() == 0:
 		tab_container.visible = false
 		center_container.visible = true
+		var removed_tabs = []
+		for t in tab_container.get_children():
+			tab_container.remove_child(t)
+			removed_tabs.append(t)
+		for t in removed_tabs:
+			t.queue_free()
 		return
 	
 	tab_container.visible = true
@@ -72,7 +78,7 @@ func fetch_state_machine_current_state():
 		return
 	if state:
 #		print("Current state: " + state)
-		tab.update_state(state)
+		tab.update_state("null", state, false)
 	else:
 		window_title = title
 		tab.state_machine_resource = null
@@ -81,7 +87,8 @@ func fetch_state_machine_current_state():
 func _on_RemoteViewer_about_to_show():
 	if not self.server.is_connected("req_sm_state_changed", self, "_on_remote_sm_state_changed"):
 		self.server.connect("req_sm_state_changed", self, "_on_remote_sm_state_changed")
-	update_client_tabs()
+	
+	_on_GetClientIDTimer_timeout() # force update
 	get_client_id_timer.start()
 	if get_current_tab():
 		if get_current_tab().state_machine_resource:
@@ -100,7 +107,10 @@ func _on_GetClientIDTimer_timeout():
 	if tab_container.get_child_count() <= 0:
 		return
 	var client_id = get_current_client_id()
-	self.server.request_get_tree_info(self.server.get_client_peer(client_id))
+	var client_peer = self.server.get_client_peer(client_id)
+	if not client_peer:
+		return
+	self.server.request_get_tree_info(client_peer)
 	var tree_info = yield(self.server, "res_get_tree_info")[0]
 	
 	update_tree(get_current_tab(), tree_info)
@@ -143,13 +153,14 @@ func _on_remote_sm_state_changed(old_state, new_state, by_transition, sm_path, c
 #	print("[%s]%s state change from %s to %s (t:%s)" % [client_id, sm_path, old_state, new_state, str(by_transition)])
 	if get_current_client_id() == client_id:
 		if get_current_state_machine_path() == sm_path:
-			get_current_tab().update_state(new_state)
-	
+			get_current_tab().update_state(old_state, new_state, by_transition)
+	else:
+		self.server.request_listen_sm(null, self.server.get_client_peer(client_id))
 
 func _on_tree_some_node_removed(tab):
 	if tab == get_current_tab():
 		fetch_state_machine_current_state()
 
 
-
-
+func _on_TabContainer_tab_changed(tab):
+	fetch_state_machine_current_state()

@@ -316,21 +316,29 @@ func _on_arrow_data_inspector_changed(key, value, arrow):
 	if arrow:
 		ur_lib.ur_just_dirty_the_editor()
 		if key == 'from':
-			arrow.data.from = value
-			arrow.update_from_data(graph_edit)
-			# force update
-			yield(get_tree(), "idle_frame")
-			arrow.update()
-			yield(get_tree(), "idle_frame")
-			graph_edit._update_rows_position()
+			var a = graph_edit.get_arrow(value, arrow.data.to)
+			if a: # conflict
+				printerr("%s and %s have already connected!" % [value, arrow.data.to])
+			else:
+				arrow.data.from = value
+				arrow.update_from_data(graph_edit)
+				# force update
+				yield(get_tree(), "idle_frame")
+				arrow.update()
+				yield(get_tree(), "idle_frame")
+				graph_edit._update_rows_position()
 		elif key == 'to':
-			arrow.data.to = value
-			arrow.update_from_data(graph_edit)
-			# force update
-			yield(get_tree(), "idle_frame")
-			arrow.update()
-			yield(get_tree(), "idle_frame")
-			graph_edit._update_rows_position()
+			var a = graph_edit.get_arrow(arrow.data.from, value)
+			if a: # conflict
+				printerr("%s and %s have already connected!" % [arrow.data.from, value])
+			else:
+				arrow.data.to = value
+				arrow.update_from_data(graph_edit)
+				# force update
+				yield(get_tree(), "idle_frame")
+				arrow.update()
+				yield(get_tree(), "idle_frame")
+				graph_edit._update_rows_position()
 		elif key == 'cond':
 			arrow.data.cond = value.duplicate()
 			arrow.update_from_data(graph_edit)

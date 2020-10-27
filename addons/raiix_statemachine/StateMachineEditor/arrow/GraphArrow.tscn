@@ -19,6 +19,7 @@ __meta__ = {
 }
 icon = ExtResource( 2 )
 condition_text = null
+active_gap_time = 0.1
 
 [node name="TextureRect" type="TextureRect" parent="."]
 anchor_left = 0.5
@@ -44,7 +45,6 @@ margin_right = 62.2693
 margin_bottom = -44.6724
 grow_horizontal = 2
 size_flags_horizontal = 6
-text = "testttttttt"
 align = 1
 valign = 1
 __meta__ = {
@@ -63,7 +63,6 @@ grow_horizontal = 2
 rect_rotation = 180.0
 rect_pivot_offset = Vector2( 61, 7 )
 size_flags_horizontal = 6
-text = "testttttttt"
 align = 1
 valign = 1
 __meta__ = {

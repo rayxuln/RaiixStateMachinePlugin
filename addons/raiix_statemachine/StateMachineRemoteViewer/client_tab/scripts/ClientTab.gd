@@ -131,6 +131,8 @@ func update_tree(tree_root):
 	tree.update()
 
 func get_current_state_machine_path():
+	if not state_machine_resource:
+		return ""
 	var r_path = state_machine_resource.path
 	var res = state_machine_node_path
 	var ss = r_path.split("/")
@@ -150,15 +152,19 @@ func change_node_left_button_state(node):
 		node.left_button_tex = pause_icon_tex
 		node.active = true
 
-func update_state(active_state):
+func update_state(old_state, new_state, by_transition):
 	for node in graph_edit.nodes.get_children():
-		if node.name == active_state:
+		if node.name == new_state:
 			if not node.active:
 				change_node_left_button_state(node)
 		else:
 			if node.active:
 				change_node_left_button_state(node)
-				
+	
+	if by_transition:
+		var a = graph_edit.get_arrow(old_state, new_state)
+		if a:
+			a.active = true
 
 func _load_state_machine_resource_to_graph_edit(sm_r):
 	var sm_data = sm_r.current

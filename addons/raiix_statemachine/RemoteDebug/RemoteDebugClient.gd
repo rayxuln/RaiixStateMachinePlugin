@@ -1,5 +1,6 @@
 extends Node
 
+var enable:bool = true
 
 var server_addr:String = "127.0.0.1"
 var server_port:int = 25561
@@ -20,7 +21,10 @@ enum VAR_PACKET_TYPE {
 }
 
 func _ready():
-	start_connecting()
+	if enable:
+		start_connecting()
+	else:
+		queue_free()
 	
 
 func _process(delta):

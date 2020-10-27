@@ -177,6 +177,12 @@ func cancel_arrow_placing():
 		arrow_placing_hovering_node = null
 		arrow_placing_start_node = null
 
+func get_arrow(start_node_name, end_node_name):
+	for a in arrows.get_children():
+		if a.start_node.name == start_node_name and a.end_node.name == end_node_name:
+			return a
+	return null
+
 func connect_nodes(start_node:Control, end_node:Control, data):
 	var a = preload("../../arrow/GraphArrow.tscn").instance()
 	arrows.add_child(a)
