@@ -130,7 +130,6 @@ tracks/0/keys = {
 [node name="Player" type="KinematicBody2D" parent="."]
 position = Vector2( 437.981, 286.865 )
 script = ExtResource( 4 )
-move_speed = 200.0
 jump_speed = -300.0
 
 [node name="Sprite" type="Sprite" parent="Player"]

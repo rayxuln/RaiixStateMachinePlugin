@@ -1,6 +1,6 @@
 extends Node
 
-class_name StateMachine
+class_name StateMachine, "../images/icon.png"
 
 #signal state_machine_data_property_changed(sm)
 signal state_changed(old_state, new_state, by_tansition)

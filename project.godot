@@ -50,7 +50,7 @@ _global_script_class_icons={
 "SMTCSLexemer": "",
 "SMTCSParser": "",
 "State": "",
-"StateMachine": "",
+"StateMachine": "res://addons/raiix_statemachine/images/icon.png",
 "StateMachineResource": ""
 }
 

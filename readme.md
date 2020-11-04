@@ -1,47 +1,41 @@
-# 适用于Godot的有限状态机(FSM)插件
-## 特性
-- 每个状态机和状态是一个节点
-- 状态可以拥有子状态机
-- 转换条件为一个逻辑表达式语句(字符串)，可访问调用状态以及状态机拥有者的变量和方法 
-- 状态机可视化编辑器
-- 状态机远程调试器
+# Raiix StateMachine Plugin for Godot
 
-## 使用方法
-可直接运行本项目的`scenes/RaiixStateMachineTest.tscn`示例场景，打开菜单项`Project/Tools/State MachineRemote Viewer`弹出远程状态机窗口，在场景树中`双击`一个状态机节点即可查看该状态机的状态。
+[简体中文](./readme_ch.md)
 
-![远程状态机](./images/remote_viewer.gif)
+## Features
 
-在编辑器场景视图中选中`MovementStateMachine`即可在下方面板编辑该状态机，可进行状态的添加、连接、编辑等操作。
+- Each StateMachine and State is a node
+- A State can have a sub StateMachine
+- The transition is a condition expression string that will be executed every frame to determine whether or not to change the state
+- A StateMachineResource Editor
+- A StateMachine Remote Viewer
 
-![编辑状态机](./images/sm_edit.png)
+## How to Use
 
-若要新建一个状态机，则直接添加一个`StateMachine`节点，然后在编辑状态机面板中创建状态机资源即可进行编辑。
+You can run the demo scene from `scenes/RaiixStateMachineTest.tscn`, then open the RemoteViewer window by menu `Project/Tools/State MachineRemote Viewer`. To inspect the infomation about a StateMachine node, double-click a StateMachine node, and then you are able to switch the state.
 
-## 已知Bug
-每次打开项目进行一次场景保存，或者运行一次场景，然后关闭该插件，则会出现空引用调用的错误，不用管他，再次开启插件，然后之后的操作都会正常了。
+![StateMachine Remote Viewer](./images/remote_viewer.gif)
 
-## 远程调试状态机的原理
+To edit the StateMachineResource, select the StateMachine node in the scene tree tab. Then you can add/remove/connect/edit states.
 
-在启用该插件的时候会添加一个`AutoLoad`节点，即自动加载，这个节点叫做`RemoteDubegClient`，而插件本身则加载一个`RemoteDebugServer`节点。
+![StateMachineResource Editor](./images/sm_edit.png)
 
-`RemoteDebugServer`会启用一个TCP服务器，监听`25561`端口。
+To create a new StateMachine, just add a StateMachine node to the scene, and edit it in the StateMachineResource editor.
 
-`RemoteDebugClient`则会在游戏启动的时候自动加载，连接本地`25561`上的服务器。
+## Known Issue (If the plugin is working weirdly, please read below)
 
-之后便是`RemoteDebugClient`与`RemoteDebugServer`直接的通信：服务器会请求获取客户端的场景树信息，以及某特定状态机的信息，然后在一个窗口中显示出来，达到远程调试的目的。
+Every time open the project with this plugin enabled, save the project (Press `ctr+s` or `cmd+s`) before doing anything. Then disable this plugin and an error will show up. Just ignore it and enable this plugin again, and every things just go normally and do whatever you want to do with this plugin.
 
-> 若要关闭此功能，修改`res://addons/raiix_statemachine/RemoteDebug/RemoteDebugClient.gd`文件中的`enable`变量为`false`即可，在游戏运行后该节点会自动删除。
+I really have no idea why there will be an error and it only shows up every time I open the project.
 
-## 许可证
-MIT
+## How Does the StateMachine Remote Viewer Work
 
-## 广而告之
-您的赞助将是对开发者的极大鼓励！
+The plugin will add an `AutoLoad` node, the `RemoteDebugClient`, and add the `RemoteDebugServer` node as its own child.
 
-**哔哩哔哩**
+The `RemoteDebugServer` is a TCP server and will listen on port `25561`.
 
-<https://space.bilibili.com/15155009>
+The `RemoteDebugClient` will be auto loaded when any scene starts playing, and connect to the server through port `25561`.
 
-**爱发电**
+And the server will state communicating with the client when you open the StateMachine Remote Viewer. The server will ask for the scene tree info of the client, and the info of the specific StateMachine node. Then the StateMachine Remote Viewer just presents them to you.
 
-<https://afdian.net/@raiix>
+> If you want to disable this feature, just change the value of `enable` to `false` by editing the file, 'res://addons/raiix_statemachine/RemoteDebug/RemoteDebugClient.gd'. The `RemoteDebugClient` will be removed automaticly when the game runs.
